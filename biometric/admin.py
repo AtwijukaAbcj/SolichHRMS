@@ -14,3 +14,4 @@ from .models import BiometricDevices, BiometricEmployees, COSECAttendanceArgumen
 admin.site.register(BiometricDevices)
 admin.site.register(BiometricEmployees)
 admin.site.register(COSECAttendanceArguments)
+

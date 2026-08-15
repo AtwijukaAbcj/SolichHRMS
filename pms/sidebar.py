@@ -54,3 +54,4 @@ def question_template_accessibility(request, submenu, user_perms, *args, **kwarg
     return request.user.has_perm("pms.view_questiontemplate") or is_reportingmanager(
         request.user
     )
+

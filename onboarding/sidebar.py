@@ -1,7 +1,7 @@
 """
 onboarding/sidebar.py
 
-To set Horilla sidebar for onboarding
+To set Solich sidebar for onboarding
 """
 
 from django.contrib.auth.context_processors import PermWrapper
@@ -49,3 +49,4 @@ def candidates_view_accessibility(
     request, _submenu: dict = {}, user_perms: PermWrapper = [], *args, **kwargs
 ) -> bool:
     return request.user.has_perm("recruitment.view_candidate")
+

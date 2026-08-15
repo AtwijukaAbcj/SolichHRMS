@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 from django.db import models
 from django.db.models.fields.related_descriptors import ForwardManyToOneDescriptor
 
-from horilla.horilla_middlewares import _thread_locals
+from solich.solich_middlewares import _thread_locals
 
 
 def record_queryset_paginator(request, queryset, page_name, records_per_page=10):
@@ -123,3 +123,4 @@ def group_by_queryset(
         # getting related queryset
     groups = Paginator(groups, records_per_page)
     return groups.get_page(page)
+

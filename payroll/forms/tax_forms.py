@@ -16,7 +16,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from base.methods import reload_queryset
-from horilla import horilla_middlewares
+from solich import solich_middlewares
 from payroll.models.models import FilingStatus
 from payroll.models.tax_models import TaxBracket
 
@@ -26,7 +26,7 @@ class ModelForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for field_name, field in self.fields.items():
             input_widget = field.widget
@@ -108,3 +108,4 @@ class TaxBracketForm(ModelForm):
         widgets = {
             "filing_status_id": forms.HiddenInput(),
         }
+

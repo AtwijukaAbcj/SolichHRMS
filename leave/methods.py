@@ -227,3 +227,4 @@ def is_company_leave(input_date):
         if date_week_no == week_no and date_week_day == week_day:
             return company_leave
     return False
+

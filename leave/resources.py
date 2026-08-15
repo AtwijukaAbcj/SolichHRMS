@@ -12,3 +12,4 @@ from .models import Holiday
 class HolidayResource(resources.ModelResource):
     class Meta:
         model = Holiday
+

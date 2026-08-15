@@ -40,14 +40,14 @@ from helpdesk.models import (
     TicketType,
 )
 from helpdesk.threading import AddAssigneeThread, RemoveAssigneeThread, TicketSendThread
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     login_required,
     manager_can_enter,
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from notifications.signals import notify
 
 # Create your views here.
@@ -1263,3 +1263,4 @@ def update_priority(request, ticket_id):
     ti.save()
     messages.success(request, _("Priority updated successfully."))
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+

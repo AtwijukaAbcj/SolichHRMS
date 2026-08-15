@@ -9,7 +9,7 @@ from django import forms
 from django_filters import CharFilter, DateFilter
 
 from helpdesk.models import FAQ, FAQCategory, Ticket
-from horilla.filters import FilterSet
+from solich.filters import FilterSet
 
 
 class FAQFilter(FilterSet):
@@ -109,3 +109,4 @@ class TicketReGroup:
         ("assigned_to", "Assigner"),
         ("employee_id__employee_work_info__company_id", "Company"),
     ]
+

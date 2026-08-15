@@ -21,7 +21,7 @@ class BiometricConfig(AppConfig):
     def ready(self):
         from django.urls import include, path
 
-        from horilla.urls import urlpatterns
+        from solich.urls import urlpatterns
 
         urlpatterns.append(
             path("biometric/", include("biometric.urls")),
@@ -30,3 +30,4 @@ class BiometricConfig(AppConfig):
         from biometric import sidebar
 
         super().ready()
+

@@ -33,3 +33,4 @@ class RecruitmentAjaxWidget(forms.Widget):
         attrs = attrs or {}
         attrs["required"] = False
         return mark_safe(rendered_script + additional_script)
+

@@ -26,3 +26,4 @@ admin.site.register(AttendanceValidationCondition)
 admin.site.register(PenaltyAccount)
 admin.site.register(GraceTime)
 admin.site.register(AttendanceRequestComment)
+

@@ -24,7 +24,7 @@ from django.utils.translation import gettext_lazy as _
 from base.methods import closest_numbers, get_key_instances, get_pagination, sortby
 from base.views import paginator_qry
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     login_required,
     manager_can_enter,
@@ -32,7 +32,7 @@ from horilla.decorators import (
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from notifications.signals import notify
 from pms.filters import (
     ActualKeyResultFilter,
@@ -2866,7 +2866,7 @@ def anonymous_feedback_add(request):
             if feedback.based_on == "employee":
                 try:
                     notify.send(
-                        User.objects.filter(username="Horilla Bot").first(),
+                        User.objects.filter(username="Solich Bot").first(),
                         recipient=feedback.employee_id.employee_user_id,
                         verb="You received an anonymous feedback!",
                         verb_ar="لقد تلقيت تقييمًا مجهولًا!",
@@ -3506,3 +3506,4 @@ def meeting_single_view(request, id):
         context["previous"] = previous_id
         context["next"] = next_id
     return render(request, "meetings/meeting_single_view.html", context)
+

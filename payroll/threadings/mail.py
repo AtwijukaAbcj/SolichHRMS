@@ -73,3 +73,4 @@ class MailSendThread(Thread):
                 logger.exception(e)
                 pass
         return
+

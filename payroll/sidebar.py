@@ -69,3 +69,4 @@ def loan_accessibility(request, submenu, user_perms, *args, **kwargs):
 
 def federal_tax_accessibility(request, submenu, user_perms, *args, **kwargs):
     return request.user.has_perm("payroll.view_filingstatus")
+

@@ -56,13 +56,13 @@ from base.methods import (
 from base.models import Company
 from base.views import paginator_qry
 from employee.models import EmployeeWorkInformation
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     login_required,
     manager_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from notifications.signals import notify
 
 
@@ -1568,3 +1568,4 @@ def asset_history_search(request):
             "requests_ids": requests_ids,
         },
     )
+

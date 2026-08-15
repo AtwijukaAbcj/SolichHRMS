@@ -37,3 +37,4 @@ admin.site.register(Objective)
 admin.site.register(KeyResultFeedback)
 admin.site.register(Meetings)
 admin.site.register(Comment, SimpleHistoryAdmin)
+

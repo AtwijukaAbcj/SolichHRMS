@@ -20,7 +20,7 @@ from xhtml2pdf import pisa
 
 from base.models import Company, DynamicPagination
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import login_required
+from solich.decorators import login_required
 from leave.models import LeaveRequest, LeaveRequestConditionApproval
 from recruitment.models import Candidate
 
@@ -701,7 +701,7 @@ def filter_conditional_leave_request(request):
 
 
 def get_pagination():
-    from horilla.horilla_middlewares import _thread_locals
+    from solich.solich_middlewares import _thread_locals
 
     request = getattr(_thread_locals, "request", None)
     user = request.user
@@ -710,3 +710,4 @@ def get_pagination():
     if page:
         count = page.pagination
     return count
+

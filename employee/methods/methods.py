@@ -60,3 +60,4 @@ def get_ordered_badge_ids():
     if pure_numbers:
         result.insert(0, [pure_numbers[0], pure_numbers[-1]])
     return result
+

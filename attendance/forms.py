@@ -56,9 +56,10 @@ from base.methods import reload_queryset
 from base.models import Company, EmployeeShift
 from employee.filters import EmployeeFilter
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+
+from solich import solich_middlewares
+from solich_widgets.widgets.solich_multi_select_field import SolichMultiSelectField
+from solich_widgets.widgets.select_widgets import SolichMultiSelectWidget
 from leave.filters import LeaveRequestFilter
 from leave.models import LeaveType
 from payroll.methods.methods import get_working_days
@@ -74,7 +75,7 @@ class ModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         reload_queryset(self.fields)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
 
         for field_name, field in self.fields.items():
             widget = field.widget
@@ -237,9 +238,9 @@ class AttendanceForm(ModelForm):
     Model form for Attendance model
     """
 
-    employee_id = HorillaMultiSelectField(
+    employee_id = SolichMultiSelectField(
         queryset=Employee.objects.filter(employee_work_info__isnull=False),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -985,7 +986,7 @@ class BulkAttendanceRequestForm(ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         employee = request.user.employee_get
         super().__init__(*args, **kwargs)
         if employee and hasattr(employee, "employee_work_info"):
@@ -1078,3 +1079,4 @@ class BulkAttendanceRequestForm(ModelForm):
             instance.save()
 
         return instance
+

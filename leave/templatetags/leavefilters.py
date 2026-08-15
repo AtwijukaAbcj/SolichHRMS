@@ -12,3 +12,4 @@ def is_compensatory(user):
         return LeaveGeneralSetting.objects.first().compensatory_leave
     else:
         return False
+

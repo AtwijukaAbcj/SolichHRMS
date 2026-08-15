@@ -42,14 +42,14 @@ from base.methods import (
 )
 from base.models import JobPosition
 from employee.models import Employee, EmployeeBankDetails, EmployeeWorkInformation
-from horilla import settings
-from horilla.decorators import (
+from solich import settings
+from solich.decorators import (
     hx_request_required,
     logger,
     login_required,
     permission_required,
 )
-from horilla.group_by import group_by_queryset as general_group_by
+from solich.group_by import group_by_queryset as general_group_by
 from notifications.signals import notify
 from onboarding.decorators import (
     all_manager_can_enter,
@@ -1820,3 +1820,4 @@ def candidate_select_filter(request):
         context = {"employee_ids": employee_ids, "total_count": total_count}
 
         return JsonResponse(context)
+

@@ -15,7 +15,7 @@ from base.models import (
     ShiftRequest,
     WorkTypeRequest,
 )
-from horilla.filters import FilterSet, filter_by_name
+from solich.filters import FilterSet, filter_by_name
 
 
 class ShiftRequestFilter(FilterSet):
@@ -279,3 +279,4 @@ class RotatingShiftRequestReGroup:
         ("employee_id__employee_work_info__job_role_id", "Job Role"),
         ("employee_id__employee_work_info__reporting_manager_id", "Reporting Manager"),
     ]
+

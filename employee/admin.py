@@ -27,3 +27,4 @@ admin.site.register(EmployeeBankDetails)
 admin.site.register(EmployeeWorkInformation, SimpleHistoryAdmin)
 admin.site.register([EmployeeNote, EmployeeTag, PolicyMultipleFile, Policy, BonusPoint])
 admin.site.register([DisciplinaryAction, Actiontype])
+

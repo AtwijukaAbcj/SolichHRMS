@@ -29,13 +29,13 @@ from base.methods import (
 )
 from base.models import Company
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     login_required,
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from notifications.signals import notify
 from payroll.context_processors import get_active_employees
 from payroll.filters import ContractFilter, ContractReGroup, PayslipFilter
@@ -1865,3 +1865,4 @@ def delete_auto_payslip(request, auto_id):
     except PayslipAutoGenerate.DoesNotExist:
         messages.error(request, _("Payslip auto generate not found."))
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+

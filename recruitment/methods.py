@@ -70,3 +70,4 @@ def update_rec_template_grp(upt_template_ids, template_groups, rec_id):
             )
             for survey in rec_surveys_templates:
                 survey.recruitment_ids.add(recruitment_obj)
+

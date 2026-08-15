@@ -598,3 +598,4 @@ urlpatterns = [
         name="matching-resume-completion",
     ),
 ]
+

@@ -44,14 +44,14 @@ from base.countries import country_arr, s_a, states
 from base.methods import export_data, generate_pdf, get_key_instances
 from base.models import EmailLog, JobPosition
 from employee.models import Employee, EmployeeWorkInformation
-from horilla import settings
-from horilla.decorators import (
+from solich import settings
+from solich.decorators import (
     hx_request_required,
     logger,
     login_required,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from notifications.signals import notify
 from recruitment.decorators import manager_can_enter, recruitment_manager_can_enter
 from recruitment.filters import (
@@ -3052,3 +3052,4 @@ def matching_resume_completion(request):
     contact_info = extract_info(resume_file)
 
     return JsonResponse(contact_info)
+

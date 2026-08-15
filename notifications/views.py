@@ -248,3 +248,4 @@ def live_all_notification_count(request):
             "all_count": request.user.notifications.count(),
         }
     return JsonResponse(data)
+

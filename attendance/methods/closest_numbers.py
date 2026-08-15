@@ -24,3 +24,4 @@ def closest_numbers(numbers: list, input_number: int) -> tuple:
     except:
         pass
     return (previous_number, next_number)
+

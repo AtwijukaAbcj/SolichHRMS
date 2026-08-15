@@ -21,8 +21,8 @@ from base.forms import ModelForm as BaseForm
 from base.methods import reload_queryset
 from employee.filters import EmployeeFilter
 from employee.models import Department, JobPosition
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+from solich_widgets.widgets.solich_multi_select_field import SolichMultiSelectField
+from solich_widgets.widgets.select_widgets import SolichMultiSelectWidget
 from pms.models import (
     AnonymousFeedback,
     Comment,
@@ -109,9 +109,9 @@ class ObjectiveForm(BaseForm):
             "employee", None
         )  # access the logged-in user's information
         super().__init__(*args, **kwargs)
-        self.fields["assignees"] = HorillaMultiSelectField(
+        self.fields["assignees"] = SolichMultiSelectField(
             queryset=Employee.objects.all(),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -122,9 +122,9 @@ class ObjectiveForm(BaseForm):
             label="Assignees",
         )
 
-        self.fields["managers"] = HorillaMultiSelectField(
+        self.fields["managers"] = SolichMultiSelectField(
             queryset=Employee.objects.all(),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -150,7 +150,7 @@ class ObjectiveForm(BaseForm):
         cleaned_data = super().clean()
         add_assignees = cleaned_data.get("add_assignees")
         for field_name, field_instance in self.fields.items():
-            if isinstance(field_instance, HorillaMultiSelectField):
+            if isinstance(field_instance, SolichMultiSelectField):
                 self.errors.pop(field_name, None)
                 if (
                     add_assignees
@@ -737,9 +737,9 @@ class FeedbackForm(ModelForm):
         if instance:
             kwargs["initial"] = set_date_field_initial(instance)
         super().__init__(*args, **kwargs)
-        self.fields["subordinate_id"] = HorillaMultiSelectField(
+        self.fields["subordinate_id"] = SolichMultiSelectField(
             queryset=Employee.objects.all(),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -1039,7 +1039,7 @@ class MeetingsForm(BaseForm):
         employees = Employee.objects.filter(id__in=employee_id)
         cleaned_data["employee_id"] = employees
 
-        if isinstance(self.fields["employee_id"], HorillaMultiSelectField):
+        if isinstance(self.fields["employee_id"], SolichMultiSelectField):
             ids = self.data.getlist("employee_id")
             if ids:
                 self.errors.pop("employee_id", None)
@@ -1058,9 +1058,9 @@ class MeetingsForm(BaseForm):
             employees = Employee.objects.filter(id__in=self.instance.employee_id.all())
             self.fields["answer_employees"].queryset = employees
         else:
-            self.fields["employee_id"] = HorillaMultiSelectField(
+            self.fields["employee_id"] = SolichMultiSelectField(
                 queryset=Employee.objects.filter(employee_work_info__isnull=False),
-                widget=HorillaMultiSelectWidget(
+                widget=SolichMultiSelectWidget(
                     filter_route_name="employee-widget-filter",
                     filter_class=EmployeeFilter,
                     filter_instance_contex_name="f",
@@ -1076,3 +1076,4 @@ class MeetingsForm(BaseForm):
                 self.fields["answer_employees"].queryset = employees
         except:
             pass
+

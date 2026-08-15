@@ -339,3 +339,4 @@ class AssetHistoryReGroup:
         ("assigned_date", "Assigned Date"),
         ("return_date", "Return Date"),
     ]
+

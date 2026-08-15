@@ -639,3 +639,4 @@ def save_payslip(**kwargs):
     instance.save()
     instance.installment_ids.set(kwargs["installments"])
     return instance
+

@@ -45,3 +45,4 @@ def resignation_letter_accessibility(request, menu, user_perms, *args, **kwargs)
     return resignation_request_enabled(request)[
         "enabled_resignation_request"
     ] and request.user.has_perm("offboarding.view_resignationletter")
+

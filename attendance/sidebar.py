@@ -80,3 +80,4 @@ def dashboard_accessibility(request, submenu, user_perms, *args, **kwargs):
 
 def tracking_accessibility(request, submenu, user_perms, *args, **kwargs):
     return enable_late_come_early_out_tracking(None).get("tracking")
+

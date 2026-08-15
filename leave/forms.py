@@ -1,5 +1,5 @@
 """
-This module provides Horilla ModelForms for creating and managing leave-related data,
+This module provides Solich ModelForms for creating and managing leave-related data,
 including leave type, leave request, leave allocation request, holidays and company leaves.
 """
 
@@ -21,10 +21,10 @@ from base.models import Department
 from employee.filters import EmployeeFilter
 from employee.forms import MultipleFileField
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla_widgets.forms import HorillaForm, HorillaModelForm
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+from solich import solich_middlewares
+from solich_widgets.forms import SolichForm, SolichModelForm
+from solich_widgets.widgets.solich_multi_select_field import SolichMultiSelectField
+from solich_widgets.widgets.select_widgets import SolichMultiSelectWidget
 
 from .methods import (
     calculate_requested_days,
@@ -66,7 +66,7 @@ class ModelForm(forms.ModelForm):
         based on the current request, particularly for 'employee_id' and 'company_id' fields.
         """
         super().__init__(*args, **kwargs)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for field_name, field in self.fields.items():
             widget = field.widget
@@ -115,7 +115,7 @@ class ModelForm(forms.ModelForm):
 class ConditionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for field_name, field in self.fields.items():
             widget = field.widget
@@ -565,7 +565,7 @@ class HolidayForm(ModelForm):
         self.fields["name"].widget.attrs["autocomplete"] = "name"
 
 
-class LeaveOneAssignForm(HorillaModelForm):
+class LeaveOneAssignForm(SolichModelForm):
     """
     Form for assigning available leave to employees.
 
@@ -573,12 +573,12 @@ class LeaveOneAssignForm(HorillaModelForm):
     by specifying the employee and setting the is_active flag.
 
     Attributes:
-        - employee_id: A HorillaMultiSelectField representing the employee to assign leave to.
+        - employee_id: A SolichMultiSelectField representing the employee to assign leave to.
     """
 
-    employee_id = HorillaMultiSelectField(
+    employee_id = SolichMultiSelectField(
         queryset=Employee.objects.all(),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -1064,7 +1064,7 @@ class LeaveRequestExportForm(forms.Form):
     )
 
 
-class AssignLeaveForm(HorillaForm):
+class AssignLeaveForm(SolichForm):
     """
     Form for Payslip
     """
@@ -1078,9 +1078,9 @@ class AssignLeaveForm(HorillaForm):
         label="Leave Type",
         required=False,
     )
-    employee_id = HorillaMultiSelectField(
+    employee_id = SolichMultiSelectField(
         queryset=Employee.objects.all(),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -1293,7 +1293,7 @@ class CompensatoryLeaveForm(ModelForm):
 
         super(CompensatoryLeaveForm, self).__init__(*args, **kwargs)
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         instance_id = None
         if self.instance:
             instance_id = self.instance.id
@@ -1395,3 +1395,4 @@ class CompensatoryLeaveRequestcommentForm(ModelForm):
 
         model = CompensatoryLeaverequestComment
         fields = ("comment",)
+

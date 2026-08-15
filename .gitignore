@@ -148,3 +148,8 @@ whoosh_index/
 
 #VSCode
 .vscode/
+TestDB_Solich.sqlite3
+.env
+__pycache__/
+*.pyc
+staticfiles/

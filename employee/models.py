@@ -17,7 +17,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy as trans
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.solich_company_manager import SolichCompanyManager
 from base.models import (
     Company,
     Department,
@@ -29,10 +29,10 @@ from base.models import (
     validate_time_format,
 )
 from employee.methods.duration_methods import format_time, strtime_seconds
-from horilla import horilla_middlewares
-from horilla.models import HorillaModel
-from horilla_audit.methods import get_diff
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
+from solich import solich_middlewares
+from solich.models import SolichModel
+from solich_audit.methods import get_diff
+from solich_audit.models import SolichAuditInfo, SolichAuditLog
 
 # create your model
 
@@ -101,7 +101,7 @@ class Employee(models.Model):
     emergency_contact_relation = models.CharField(max_length=20, null=True, blank=True)
     is_active = models.BooleanField(default=True)
     additional_info = models.JSONField(null=True, blank=True)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_work_info__company_id"
     )
 
@@ -351,7 +351,7 @@ class Employee(models.Model):
         """
         from attendance.models import Attendance
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if not getattr(request, "working_employees", None):
             today = datetime.now().date()
             yesterday = today - timedelta(days=1)
@@ -414,7 +414,7 @@ class Employee(models.Model):
         # call the parent class's save method to save the object
         prev_employee = Employee.objects.filter(id=self.id).first()
         super().save(*args, **kwargs)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if request and not self.is_active and self.get_archive_condition() is not False:
             self.is_active = True
             super().save(*args, **kwargs)
@@ -444,7 +444,7 @@ class Employee(models.Model):
         return self
 
 
-class EmployeeTag(HorillaModel):
+class EmployeeTag(SolichModel):
     """
     EmployeeTag Model
     """
@@ -552,13 +552,13 @@ class EmployeeWorkInformation(models.Model):
     )
     additional_info = models.JSONField(null=True, blank=True)
     experience = models.FloatField(null=True, blank=True, default=0)
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def __str__(self) -> str:
         return f"{self.employee_id} - {self.job_position_id}"
@@ -599,7 +599,7 @@ class EmployeeWorkInformation(models.Model):
         return self
 
 
-class EmployeeBankDetails(HorillaModel):
+class EmployeeBankDetails(SolichModel):
     """
     EmployeeBankDetails model
     """
@@ -628,7 +628,7 @@ class EmployeeBankDetails(HorillaModel):
         max_length=50, null=True, blank=True, verbose_name="Bank Code #2"
     )
     additional_info = models.JSONField(null=True, blank=True)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -650,7 +650,7 @@ class EmployeeBankDetails(HorillaModel):
                 )
 
 
-class NoteFiles(HorillaModel):
+class NoteFiles(SolichModel):
     files = models.FileField(upload_to="employee/NoteFiles", blank=True, null=True)
     objects = models.Manager()
 
@@ -658,7 +658,7 @@ class NoteFiles(HorillaModel):
         return self.files.name.split("/")[-1]
 
 
-class EmployeeNote(HorillaModel):
+class EmployeeNote(SolichModel):
     """
     EmployeeNote model
     """
@@ -673,7 +673,7 @@ class EmployeeNote(HorillaModel):
     )
     note_files = models.ManyToManyField(NoteFiles, blank=True)
     updated_by = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -681,7 +681,7 @@ class EmployeeNote(HorillaModel):
         return f"{self.description}"
 
 
-class PolicyMultipleFile(HorillaModel):
+class PolicyMultipleFile(SolichModel):
     """
     PoliciesMultipleFile model
     """
@@ -689,7 +689,7 @@ class PolicyMultipleFile(HorillaModel):
     attachment = models.FileField(upload_to="employee/policies")
 
 
-class Policy(HorillaModel):
+class Policy(SolichModel):
     """
     Policies model
     """
@@ -701,14 +701,14 @@ class Policy(HorillaModel):
     attachments = models.ManyToManyField(PolicyMultipleFile, blank=True)
     company_id = models.ManyToManyField(Company, blank=True, verbose_name=_("Company"))
 
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
         self.attachments.all().delete()
 
 
-class BonusPoint(HorillaModel):
+class BonusPoint(SolichModel):
     """
     Model representing bonus points for employees with associated conditions.
     """
@@ -735,13 +735,13 @@ class BonusPoint(HorillaModel):
     )
     redeeming_points = models.IntegerField(blank=True, null=True)
     reason = models.TextField(blank=True, null=True, max_length=255)
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -769,7 +769,7 @@ class BonusPoint(HorillaModel):
             BonusPoint.objects.create(employee_id=instance)
 
 
-class Actiontype(HorillaModel):
+class Actiontype(SolichModel):
     """
     Action type model
     """
@@ -792,7 +792,7 @@ class Actiontype(HorillaModel):
         return f"{self.title}"
 
 
-class DisciplinaryAction(HorillaModel):
+class DisciplinaryAction(SolichModel):
     """
     Disciplinary model
     """
@@ -815,7 +815,7 @@ class DisciplinaryAction(HorillaModel):
     )
     company_id = models.ManyToManyField(Company, blank=True)
 
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def __str__(self) -> str:
         return f"{self.action}"
@@ -824,7 +824,7 @@ class DisciplinaryAction(HorillaModel):
         ordering = ["-id"]
 
 
-class EmployeeGeneralSetting(HorillaModel):
+class EmployeeGeneralSetting(SolichModel):
     """
     EmployeeGeneralSetting
     """
@@ -832,3 +832,4 @@ class EmployeeGeneralSetting(HorillaModel):
     badge_id_prefix = models.CharField(max_length=5, default="PEP")
     objects = models.Manager()
     company_id = models.ForeignKey(Company, null=True, on_delete=models.CASCADE)
+

@@ -34,3 +34,4 @@ admin.site.register(Reimbursement)
 admin.site.register(ReimbursementrequestComment)
 admin.site.register(MultipleCondition)
 admin.site.register(PayslipAutoGenerate)
+

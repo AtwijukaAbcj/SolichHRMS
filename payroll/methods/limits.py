@@ -55,3 +55,4 @@ def compute_limit(component, amount, _day_dict):
     #         amount = amount + (max_day_amount * working_days_on_period)
 
     return amount
+

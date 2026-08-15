@@ -220,3 +220,4 @@ class RemoveAssigneeThread(Thread):
                 messages.error(
                     self.request, f"Mail not sent to {recipient.get_full_name()}"
                 )
+

@@ -16,8 +16,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 
 from employee.models import Employee
-from horilla.decorators import login_required, permission_required
-from horilla.group_by import group_by_queryset
+from solich.decorators import login_required, permission_required
+from solich.group_by import group_by_queryset
 from notifications.signals import notify
 from recruitment.decorators import manager_can_enter, recruitment_manager_can_enter
 from recruitment.filters import StageFilter
@@ -387,3 +387,4 @@ def remove_recruitment_manager(request, mid, rid):
             "pd": previous_data,
         },
     )
+

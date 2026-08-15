@@ -11,8 +11,8 @@ from attendance.models import AttendanceGeneralSetting
 from base.models import Company, TrackLateComeEarlyOut
 from base.urls import urlpatterns
 from employee.models import EmployeeGeneralSetting
-from horilla import horilla_apps
-from horilla.decorators import hx_request_required, login_required, permission_required
+from solich import solich_apps
+from solich.decorators import hx_request_required, login_required, permission_required
 from offboarding.models import OffboardingGeneralSetting
 from payroll.models.models import PayrollGeneralSetting
 from recruitment.models import RecruitmentGeneralSetting
@@ -105,7 +105,7 @@ urlpatterns.append(
 
 
 def white_labelling_company(request):
-    white_labelling = getattr(horilla_apps, "WHITE_LABELLING", False)
+    white_labelling = getattr(solich_apps, "WHITE_LABELLING", False)
     if white_labelling:
         hq = Company.objects.filter(hq=True).last()
         try:
@@ -118,12 +118,12 @@ def white_labelling_company(request):
             company = hq
 
         return {
-            "white_label_company_name": company.company if company else "Seeta University",
+            "white_label_company_name": company.company if company else "Solich",
             "white_label_company": company,
         }
     else:
         return {
-            "white_label_company_name": "Seeta University",
+            "white_label_company_name": "Solich HRMS",
             "white_label_company": None,
         }
 
@@ -207,3 +207,4 @@ def enable_late_come_early_out_tracking(request):
     tracking = TrackLateComeEarlyOut.objects.first()
     enable = tracking.is_enable if tracking else True
     return {"tracking": enable, "late_come_early_out_tracking": enable}
+

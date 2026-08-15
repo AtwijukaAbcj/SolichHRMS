@@ -18,3 +18,4 @@ admin.site.register(FAQ)
 admin.site.register(FAQCategory)
 admin.site.register(Attachment)
 admin.site.register(DepartmentManager)
+

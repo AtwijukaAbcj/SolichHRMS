@@ -15,7 +15,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.filters import FilterSet
 from employee.models import Employee
-from horilla.filters import filter_by_name
+from solich.filters import filter_by_name
 from payroll.models.models import (
     Allowance,
     Contract,
@@ -396,3 +396,4 @@ class PayslipReGroup:
         ("employee_id__employee_work_info__job_role_id", _("Job Role")),
         ("employee_id__employee_work_info__company_id", _("Company")),
     ]
+

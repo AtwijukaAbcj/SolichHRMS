@@ -13,13 +13,13 @@ from base.context_processors import intial_notice_period
 from base.methods import closest_numbers, sortby
 from base.views import paginator_qry
 from employee.models import Employee
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     login_required,
     manager_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset as group_by
+from solich.group_by import group_by_queryset as group_by
 from notifications.signals import notify
 from offboarding.decorators import (
     any_manager_can_enter,
@@ -917,3 +917,4 @@ def get_notice_period_end_date(request):
         "end_date": end_date,
     }
     return JsonResponse(response)
+

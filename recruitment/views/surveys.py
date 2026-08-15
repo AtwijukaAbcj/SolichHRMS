@@ -19,7 +19,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from base.methods import closest_numbers, get_pagination
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     is_recruitment_manager,
     login_required,
@@ -428,3 +428,4 @@ def question_add(request):
             messages.success(request, "Question added")
             return HttpResponse("<script>window.location.reload()</script>")
     return render(request, "survey/add_form.html", {"form": form})
+

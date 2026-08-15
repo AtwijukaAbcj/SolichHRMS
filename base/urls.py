@@ -32,7 +32,7 @@ from base.models import (
     WorkTypeRequest,
 )
 from employee.models import EmployeeTag
-from horilla_audit.models import AuditTag
+from solich_audit.models import AuditTag
 
 urlpatterns = [
     path("", views.home, name="home-page"),
@@ -80,7 +80,7 @@ urlpatterns = [
     path("login/", views.login_user, name="login"),
     path(
         "forgot-password",
-        views.HorillaPasswordResetView.as_view(),
+        views.SolichPasswordResetView.as_view(),
         name="forgot-password",
     ),
     path(
@@ -1069,3 +1069,4 @@ urlpatterns = [
         name="skills-view",
     ),
 ]
+

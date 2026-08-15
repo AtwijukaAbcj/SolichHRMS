@@ -30,3 +30,4 @@ admin.site.register(RecruitmentMailTemplate)
 admin.site.register(CandidateRating)
 admin.site.register(SkillZone)
 admin.site.register(InterviewSchedule)
+

@@ -157,3 +157,4 @@ class LeaveClashThread(Thread):
         for leave_request in leave_requests_to_update:
             leave_request.leave_clashes_count = self.count_leave_clashes()
             leave_request.save()
+

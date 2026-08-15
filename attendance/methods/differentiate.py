@@ -95,3 +95,4 @@ def get_diff_dict(first_dict, other_dict, model=None):
                     other_value = field.related_model.objects.get(id=other_value)
             difference[verb_key] = (value, other_value)
     return difference
+

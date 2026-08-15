@@ -66,3 +66,4 @@ def work_type_request_change_permission(function=None, *args, **kwargs):
         # return function(request, *args, **kwargs)
 
     return check_permission
+

@@ -51,3 +51,4 @@ urlpatterns = [
         name="tax-bracket-delete",
     ),
 ]
+

@@ -63,3 +63,4 @@ scheduler.add_job(leave_reset, "interval", hours=4)
 scheduler.add_job(recurring_holiday, "interval", hours=4)
 
 scheduler.start()
+

@@ -736,3 +736,4 @@ class COSECBiometric:
             f"&seq-number={seq_num}&no-of-events={no_of_events}"
         )
         return self.__send_request(url)
+

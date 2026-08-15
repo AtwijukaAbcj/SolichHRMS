@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.solich_company_manager import SolichCompanyManager
 from base.models import (
     Company,
     Department,
@@ -24,10 +24,10 @@ from base.models import (
     clear_messages,
 )
 from employee.models import Employee, EmployeeWorkInformation
-from horilla import horilla_middlewares
-from horilla.models import HorillaModel
-from horilla_audit.methods import get_diff
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
+from solich import solich_middlewares
+from solich.models import SolichModel
+from solich_audit.methods import get_diff
+from solich_audit.models import SolichAuditInfo, SolichAuditLog
 from leave.threading import LeaveClashThread
 
 from .methods import attendance_days, calculate_requested_days
@@ -151,7 +151,7 @@ WEEK_DAYS = [
 ]
 
 
-class LeaveType(HorillaModel):
+class LeaveType(SolichModel):
     icon = models.ImageField(null=True, blank=True, upload_to="leave/leave_icon")
     name = models.CharField(max_length=30, null=False)
     color = models.CharField(null=True, max_length=30)
@@ -199,7 +199,7 @@ class LeaveType(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = SolichCompanyManager(related_company_field="company_id")
 
     class Meta:
         ordering = ["-id"]
@@ -235,7 +235,7 @@ class LeaveType(HorillaModel):
         return self.name
 
 
-class Holiday(HorillaModel):
+class Holiday(SolichModel):
     name = models.CharField(max_length=30, null=False, verbose_name=_("Name"))
     start_date = models.DateField(verbose_name=_("Start Date"))
     end_date = models.DateField(null=True, blank=True, verbose_name=_("End Date"))
@@ -243,13 +243,13 @@ class Holiday(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = SolichCompanyManager(related_company_field="company_id")
 
     def __str__(self):
         return self.name
 
 
-class CompanyLeave(HorillaModel):
+class CompanyLeave(SolichModel):
     based_on_week = models.CharField(
         max_length=100, choices=WEEKS, blank=True, null=True
     )
@@ -257,7 +257,7 @@ class CompanyLeave(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager(related_company_field="company_id")
+    objects = SolichCompanyManager(related_company_field="company_id")
 
     class Meta:
         unique_together = ("based_on_week", "based_on_week_day")
@@ -269,7 +269,7 @@ class CompanyLeave(HorillaModel):
 from django.db.models import Sum
 
 
-class AvailableLeave(HorillaModel):
+class AvailableLeave(SolichModel):
     employee_id = models.ForeignKey(
         Employee,
         on_delete=models.CASCADE,
@@ -298,13 +298,13 @@ class AvailableLeave(HorillaModel):
     expired_date = models.DateField(
         blank=True, null=True, verbose_name=_("CarryForward Expired Date")
     )
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
 
@@ -461,7 +461,7 @@ def restrict_leaves(restri):
     return restricted_dates
 
 
-class LeaveRequest(HorillaModel):
+class LeaveRequest(SolichModel):
     employee_id = models.ForeignKey(
         Employee, on_delete=models.CASCADE, verbose_name=_("Employee")
     )
@@ -509,10 +509,10 @@ class LeaveRequest(HorillaModel):
     reject_reason = models.TextField(
         blank=True, verbose_name=_("Reject Reason"), max_length=255
     )
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
     created_by = models.ForeignKey(
@@ -523,7 +523,7 @@ class LeaveRequest(HorillaModel):
         related_name="leave_request_created",
         verbose_name=_("Created By"),
     )
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -688,7 +688,7 @@ class LeaveRequest(HorillaModel):
             emp_dep = self.employee_id.employee_work_info.department_id
             emp_job = self.employee_id.employee_work_info.job_position_id
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if not request.user.is_superuser:
             if EmployeePastLeaveRestrict.objects.first().enabled:
                 if self.start_date < date.today():
@@ -792,7 +792,7 @@ class LeaveRequest(HorillaModel):
         return result
 
     def is_approved(self):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if request:
             employee = Employee.objects.filter(employee_user_id=request.user).first()
             condition_approval = LeaveRequestConditionApproval.objects.filter(
@@ -804,7 +804,7 @@ class LeaveRequest(HorillaModel):
                 return True
 
     def delete(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
 
         if self.status == "requested":
             """
@@ -864,7 +864,7 @@ class LeaverequestFile(models.Model):
     file = models.FileField(upload_to="leave/request_files")
 
 
-class LeaverequestComment(HorillaModel):
+class LeaverequestComment(SolichModel):
     """
     LeaverequestComment Model
     """
@@ -878,7 +878,7 @@ class LeaverequestComment(HorillaModel):
         return f"{self.comment}"
 
 
-class LeaveAllocationRequest(HorillaModel):
+class LeaveAllocationRequest(SolichModel):
     leave_type_id = models.ForeignKey(
         LeaveType, on_delete=models.PROTECT, verbose_name="Leave type"
     )
@@ -895,13 +895,13 @@ class LeaveAllocationRequest(HorillaModel):
         max_length=30, choices=LEAVE_ALLOCATION_STATUS, default="requested"
     )
     reject_reason = models.TextField(blank=True, max_length=255)
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -937,7 +937,7 @@ class LeaveAllocationRequest(HorillaModel):
             return None
 
 
-class LeaveallocationrequestComment(HorillaModel):
+class LeaveallocationrequestComment(SolichModel):
     """
     LeaveallocationrequestComment Model
     """
@@ -959,7 +959,7 @@ class LeaveRequestConditionApproval(models.Model):
     manager_id = models.ForeignKey(Employee, on_delete=models.CASCADE)
 
 
-class RestrictLeave(HorillaModel):
+class RestrictLeave(SolichModel):
     title = models.CharField(max_length=20)
     start_date = models.DateField(verbose_name=_("Start Date"))
     end_date = models.DateField(verbose_name=_("End Date"))
@@ -983,7 +983,7 @@ class RestrictLeave(HorillaModel):
         return f"{self.title}"
 
 
-class CompensatoryLeaveRequest(HorillaModel):
+class CompensatoryLeaveRequest(SolichModel):
     from attendance.models import Attendance
 
     leave_type_id = models.ForeignKey(
@@ -1000,13 +1000,13 @@ class CompensatoryLeaveRequest(HorillaModel):
         max_length=30, choices=LEAVE_ALLOCATION_STATUS, default="requested"
     )
     reject_reason = models.TextField(blank=True, max_length=255)
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -1051,7 +1051,7 @@ class CompensatoryLeaveRequest(HorillaModel):
         super().save(*args, **kwargs)
 
 
-class LeaveGeneralSetting(HorillaModel):
+class LeaveGeneralSetting(SolichModel):
     """
     LeaveGeneralSettings
     """
@@ -1061,7 +1061,7 @@ class LeaveGeneralSetting(HorillaModel):
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
 
 
-class CompensatoryLeaverequestComment(HorillaModel):
+class CompensatoryLeaverequestComment(SolichModel):
     """
     CompensatoryLeaverequestComment Model
     """
@@ -1075,5 +1075,6 @@ class CompensatoryLeaverequestComment(HorillaModel):
         return f"{self.comment}"
 
 
-class EmployeePastLeaveRestrict(HorillaModel):
+class EmployeePastLeaveRestrict(SolichModel):
     enabled = models.BooleanField(default=True)
+

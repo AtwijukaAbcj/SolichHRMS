@@ -35,7 +35,7 @@ from base.methods import (
 )
 from base.models import EmployeeShift, EmployeeShiftDay
 from employee.models import Employee
-from horilla.decorators import hx_request_required, login_required, manager_can_enter
+from solich.decorators import hx_request_required, login_required, manager_can_enter
 from notifications.signals import notify
 
 
@@ -770,3 +770,4 @@ def get_employee_shift(request):
         },
     )
     return HttpResponse(f"{shift_id}")
+

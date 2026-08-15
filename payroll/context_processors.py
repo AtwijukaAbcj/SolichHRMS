@@ -47,3 +47,4 @@ def get_active_employees(request):
         is_active=True, contract_set__isnull=False, payslip__isnull=False
     ).distinct()
     return {"get_active_employees": employees}
+

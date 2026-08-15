@@ -18,7 +18,7 @@ from django.utils.translation import gettext_lazy as _
 
 from asset.models import Asset
 from attendance.models import Attendance, strtime_seconds, validate_time_format
-from base.horilla_company_manager import HorillaCompanyManager
+from base.solich_company_manager import SolichCompanyManager
 from base.models import (
     Company,
     Department,
@@ -28,9 +28,9 @@ from base.models import (
     WorkType,
 )
 from employee.models import BonusPoint, Employee, EmployeeWorkInformation
-from horilla import horilla_middlewares
-from horilla.models import HorillaModel
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
+from solich import solich_middlewares
+from solich.models import SolichModel
+from solich_audit.models import SolichAuditInfo, SolichAuditLog
 from leave.models import LeaveRequest, LeaveType
 
 # Create your models here.
@@ -72,7 +72,7 @@ def get_date_range(start_date, end_date):
     return date_list
 
 
-class FilingStatus(HorillaModel):
+class FilingStatus(SolichModel):
     """
     FilingStatus model
     """
@@ -103,13 +103,13 @@ class FilingStatus(HorillaModel):
     company_id = models.ForeignKey(
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def __str__(self) -> str:
         return str(self.filing_status)
 
 
-class Contract(HorillaModel):
+class Contract(SolichModel):
     """
     Contract Model
     """
@@ -252,14 +252,14 @@ class Contract(HorillaModel):
     )
 
     note = models.TextField(null=True, blank=True, max_length=255)
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
 
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = SolichCompanyManager("employee_id__employee_work_info__company_id")
 
     def __str__(self) -> str:
         return f"{self.contract_name} -{self.contract_start_date} - {self.contract_end_date}"
@@ -405,7 +405,7 @@ class WorkRecord(models.Model):
     is_leave_record = models.BooleanField(default=False)
     day_percentage = models.FloatField(default=0)
     last_update = models.DateTimeField(null=True, blank=True)
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = SolichCompanyManager("employee_id__employee_work_info__company_id")
 
     def save(self, *args, **kwargs):
         self.last_update = timezone.now()
@@ -674,7 +674,7 @@ class MultipleCondition(models.Model):
     )
 
 
-class Allowance(HorillaModel):
+class Allowance(SolichModel):
     """
     Allowance model
     """
@@ -894,7 +894,7 @@ class Allowance(HorillaModel):
     )
     only_show_under_employee = models.BooleanField(default=False, editable=False)
     is_loan = models.BooleanField(default=False, editable=False)
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
     other_conditions = models.ManyToManyField(
         MultipleCondition, blank=True, editable=False
     )
@@ -1006,7 +1006,7 @@ class Allowance(HorillaModel):
         return str(self.title)
 
 
-class Deduction(HorillaModel):
+class Deduction(SolichModel):
     """
     Deduction model
     """
@@ -1198,7 +1198,7 @@ class Deduction(HorillaModel):
         Company, null=True, editable=False, on_delete=models.PROTECT
     )
     only_show_under_employee = models.BooleanField(default=False, editable=False)
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     is_installment = models.BooleanField(default=False, editable=False)
     other_conditions = models.ManyToManyField(
@@ -1285,7 +1285,7 @@ class Deduction(HorillaModel):
         return str(self.title)
 
 
-class Payslip(HorillaModel):
+class Payslip(SolichModel):
     """
     Payslip model
     """
@@ -1315,12 +1315,12 @@ class Payslip(HorillaModel):
         max_length=20, null=True, default="draft", choices=status_choices
     )
     sent_to_employee = models.BooleanField(null=True, default=False)
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = SolichCompanyManager("employee_id__employee_work_info__company_id")
     installment_ids = models.ManyToManyField(Deduction, editable=False)
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
 
@@ -1408,7 +1408,7 @@ class Payslip(HorillaModel):
         ]
 
 
-class LoanAccount(HorillaModel):
+class LoanAccount(SolichModel):
     """
     This modal is used to store the loan Account details
     """
@@ -1441,7 +1441,7 @@ class LoanAccount(HorillaModel):
     asset_id = models.ForeignKey(
         Asset, on_delete=models.PROTECT, null=True, editable=False
     )
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = SolichCompanyManager("employee_id__employee_work_info__company_id")
 
     def get_installments(self):
         """
@@ -1560,7 +1560,7 @@ class ReimbursementMultipleAttachment(models.Model):
     objects = models.Manager()
 
 
-class Reimbursement(HorillaModel):
+class Reimbursement(SolichModel):
     """
     Reimbursement Model
     """
@@ -1622,13 +1622,13 @@ class Reimbursement(HorillaModel):
     allowance_id = models.ForeignKey(
         Allowance, on_delete=models.SET_NULL, null=True, editable=False
     )
-    objects = HorillaCompanyManager("employee_id__employee_work_info__company_id")
+    objects = SolichCompanyManager("employee_id__employee_work_info__company_id")
 
     class Meta:
         ordering = ["-id"]
 
     def save(self, *args, **kwargs) -> None:
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         amount_for_leave = (
             EncashmentGeneralSettings.objects.first().leave_amount
             if EncashmentGeneralSettings.objects.first()
@@ -1668,7 +1668,7 @@ class Reimbursement(HorillaModel):
                         bonus_points.save()
                     else:
                         request = getattr(
-                            horilla_middlewares._thread_locals, "request", None
+                            Solich_middlewares._thread_locals, "request", None
                         )
                         if request:
                             messages.info(
@@ -1694,7 +1694,7 @@ class Reimbursement(HorillaModel):
                             assigned_leave.save()
                         else:
                             request = getattr(
-                                horilla_middlewares._thread_locals, "request", None
+                                Solich_middlewares._thread_locals, "request", None
                             )
                             if request:
                                 messages.info(
@@ -1737,7 +1737,7 @@ class Reimbursement(HorillaModel):
                     self.allowance_id.delete()
 
     def delete(self, *args, **kwargs):
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if self.status == "approved":
             message = messages.info(
                 request,
@@ -1771,7 +1771,7 @@ class ReimbursementFile(models.Model):
     objects = models.Manager()
 
 
-class ReimbursementrequestComment(HorillaModel):
+class ReimbursementrequestComment(SolichModel):
     """
     ReimbursementRequestComment Model
     """
@@ -1897,3 +1897,4 @@ class PayslipAutoGenerate(models.Model):
 
     def __str__(self) -> str:
         return f"{self.generate_day} | {self.company_id} "
+

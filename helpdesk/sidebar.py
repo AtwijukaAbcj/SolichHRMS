@@ -18,3 +18,4 @@ SUBMENUS = [
         "redirect": reverse("ticket-view"),
     },
 ]
+

@@ -25,3 +25,4 @@ class NotificationAdmin(AbstractNotificationAdmin):
 
 
 admin.site.register(Notification, NotificationAdmin)
+

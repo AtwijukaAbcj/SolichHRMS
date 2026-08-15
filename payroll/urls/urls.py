@@ -199,3 +199,4 @@ urlpatterns = [
         name="activate-auto-payslip-generate",
     ),
 ]
+

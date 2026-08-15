@@ -19,8 +19,8 @@ from attendance.models import Attendance
 from base.methods import reload_queryset
 from base.models import WorkType
 from employee.models import DisciplinaryAction, Employee, Policy
-from horilla.filters import FilterSet, filter_by_name
-from horilla_documents.models import Document
+from solich.filters import FilterSet, filter_by_name
+from solich_documents.models import Document
 
 
 class EmployeeFilter(FilterSet):
@@ -359,3 +359,4 @@ class DisciplinaryActionFilter(FilterSet):
             "employee_id__employee_work_info__company_id",
             "employee_id__employee_work_info__shift_id",
         ]
+

@@ -28,3 +28,4 @@ def update_request(user, request):
             or user.has_perm("perms.base.change_shiftrequest")
         )
     )
+

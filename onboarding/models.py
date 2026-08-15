@@ -12,14 +12,14 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.solich_company_manager import SolichCompanyManager
 from employee.models import Employee
-from horilla.models import HorillaModel
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
+from solich.models import SolichModel
+from solich_audit.models import SolichAuditInfo, SolichAuditLog
 from recruitment.models import Candidate, Recruitment
 
 
-class OnboardingStage(HorillaModel):
+class OnboardingStage(SolichModel):
     """
     OnboardingStage models
     """
@@ -35,7 +35,7 @@ class OnboardingStage(HorillaModel):
     employee_id = models.ManyToManyField(Employee, verbose_name="Stage managers")
     sequence = models.IntegerField(null=True)
     is_final_stage = models.BooleanField(default=False)
-    objects = HorillaCompanyManager("recruitment_id__company_id")
+    objects = SolichCompanyManager("recruitment_id__company_id")
 
     def __str__(self):
         return f"{self.stage_title}"
@@ -61,7 +61,7 @@ def create_initial_stage(sender, instance, created, **kwargs):
         initial_stage.save()
 
 
-class OnboardingTask(HorillaModel):
+class OnboardingTask(SolichModel):
     """
     OnboardingTask models
     """
@@ -84,13 +84,13 @@ class OnboardingTask(HorillaModel):
         Employee, related_name="onboarding_task", verbose_name=_("Task Managers")
     )
 
-    objects = HorillaCompanyManager("stage_id__recruitment_id__company_id")
+    objects = SolichCompanyManager("stage_id__recruitment_id__company_id")
 
     def __str__(self):
         return f"{self.task_title}"
 
 
-class CandidateStage(HorillaModel):
+class CandidateStage(SolichModel):
     """
     CandidateStage model
     """
@@ -103,7 +103,7 @@ class CandidateStage(HorillaModel):
     )
     onboarding_end_date = models.DateField(blank=True, null=True)
     sequence = models.IntegerField(null=True, default=0)
-    objects = HorillaCompanyManager("candidate_id__recruitment_id__company_id")
+    objects = SolichCompanyManager("candidate_id__recruitment_id__company_id")
 
     def __str__(self):
         return f"{self.candidate_id}  |  {self.onboarding_stage_id}"
@@ -130,7 +130,7 @@ class CandidateStage(HorillaModel):
         ordering = ["sequence"]
 
 
-class CandidateTask(HorillaModel):
+class CandidateTask(SolichModel):
     """
     CandidateTask model
     """
@@ -156,11 +156,11 @@ class CandidateTask(HorillaModel):
         max_length=50, choices=choice, blank=True, null=True, default="todo"
     )
     onboarding_task_id = models.ForeignKey(OnboardingTask, on_delete=models.PROTECT)
-    objects = HorillaCompanyManager("candidate_id__recruitment_id__company_id")
-    history = HorillaAuditLog(
+    objects = SolichCompanyManager("candidate_id__recruitment_id__company_id")
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
 
@@ -176,7 +176,7 @@ class CandidateTask(HorillaModel):
         # unique_together = ("candidate_id", "onboarding_task_id")
 
 
-class OnboardingPortal(HorillaModel):
+class OnboardingPortal(SolichModel):
     """
     OnboardingPortal model
     """
@@ -188,7 +188,8 @@ class OnboardingPortal(HorillaModel):
     used = models.BooleanField(default=False)
     count = models.IntegerField(default=0)
     profile = models.ImageField(upload_to="employee/profile", null=True, blank=True)
-    objects = HorillaCompanyManager("candidate_id__recruitment_id__company_id")
+    objects = SolichCompanyManager("candidate_id__recruitment_id__company_id")
 
     def __str__(self):
         return f"{self.candidate_id} | {self.token}"
+

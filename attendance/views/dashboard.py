@@ -29,7 +29,7 @@ from base.methods import filtersubordinates
 from base.models import Department, EmployeeShiftSchedule
 from employee.models import Employee
 from employee.not_in_out_dashboard import paginator_qry
-from horilla.decorators import hx_request_required, login_required
+from solich.decorators import hx_request_required, login_required
 from leave.models import LeaveRequest
 
 
@@ -476,3 +476,4 @@ def department_overtime_chart(request):
     }
 
     return JsonResponse(response)
+

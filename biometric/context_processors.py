@@ -33,3 +33,4 @@ def biometric_is_installed(request):
         instance = BiometricAttendance.objects.first()
     is_installed = instance.is_installed
     return {"is_installed": is_installed}
+

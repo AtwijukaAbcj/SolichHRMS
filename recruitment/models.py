@@ -21,12 +21,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
-from base.horilla_company_manager import HorillaCompanyManager
+from base.solich_company_manager import SolichCompanyManager
 from base.models import Company, JobPosition
 from employee.models import Employee
-from horilla.models import HorillaModel
-from horilla_audit.methods import get_diff
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
+from solich.models import SolichModel
+from solich_audit.methods import get_diff
+from solich_audit.models import SolichAuditInfo, SolichAuditLog
 
 # Create your models here.
 
@@ -64,7 +64,7 @@ def validate_image(value):
     return value
 
 
-class SurveyTemplate(HorillaModel):
+class SurveyTemplate(SolichModel):
     """
     SurveyTemplate Model
     """
@@ -80,7 +80,7 @@ class SurveyTemplate(HorillaModel):
         return self.title
 
 
-class Skill(HorillaModel):
+class Skill(SolichModel):
     title = models.CharField(max_length=100)
 
     def __str__(self):
@@ -92,7 +92,7 @@ class Skill(HorillaModel):
         super().save(*args, **kwargs)
 
 
-class Recruitment(HorillaModel):
+class Recruitment(SolichModel):
     """
     Recruitment model
     """
@@ -149,7 +149,7 @@ class Recruitment(HorillaModel):
     start_date = models.DateField(default=django.utils.timezone.now)
     end_date = models.DateField(blank=True, null=True)
     skills = models.ManyToManyField(Skill, blank=True)
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
     default = models.manager.Manager()
 
     class Meta:
@@ -242,7 +242,7 @@ def create_initial_stage(sender, instance, created, **kwargs):
         initial_stage.save()
 
 
-class Stage(HorillaModel):
+class Stage(SolichModel):
     """
     Stage model
     """
@@ -266,7 +266,7 @@ class Stage(HorillaModel):
         max_length=20, choices=stage_types, default="interview"
     )
     sequence = models.IntegerField(null=True, default=0)
-    objects = HorillaCompanyManager(related_company_field="recruitment_id__company_id")
+    objects = SolichCompanyManager(related_company_field="recruitment_id__company_id")
 
     def __str__(self):
         return f"{self.stage}"
@@ -291,7 +291,7 @@ class Stage(HorillaModel):
         }
 
 
-class Candidate(HorillaModel):
+class Candidate(SolichModel):
     """
     Candidate model
     """
@@ -402,10 +402,10 @@ class Candidate(HorillaModel):
     joining_date = models.DateField(
         blank=True, null=True, verbose_name=_("Joining Date")
     )
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
     sequence = models.IntegerField(null=True, default=0)
@@ -417,7 +417,7 @@ class Candidate(HorillaModel):
         default="not_sent",
         editable=False,
     )
-    objects = HorillaCompanyManager(related_company_field="recruitment_id__company_id")
+    objects = SolichCompanyManager(related_company_field="recruitment_id__company_id")
     last_updated = models.DateField(null=True, auto_now=True)
 
     def __str__(self):
@@ -577,10 +577,10 @@ class Candidate(HorillaModel):
         ordering = ["sequence"]
 
 
-from horilla.signals import pre_bulk_update
+from solich.signals import pre_bulk_update
 
 
-class RejectReason(HorillaModel):
+class RejectReason(SolichModel):
     """
     RejectReason
     """
@@ -596,13 +596,13 @@ class RejectReason(HorillaModel):
         blank=True,
         verbose_name=_("Company"),
     )
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def __str__(self) -> str:
         return self.title
 
 
-class RejectedCandidate(HorillaModel):
+class RejectedCandidate(SolichModel):
     """
     RejectedCandidate
     """
@@ -617,13 +617,13 @@ class RejectedCandidate(HorillaModel):
         RejectReason, verbose_name="Reject reason", blank=True
     )
     description = models.TextField(max_length=255)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="candidate_id__recruitment_id__company_id"
     )
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
 
@@ -631,14 +631,14 @@ class RejectedCandidate(HorillaModel):
         return super().__str__()
 
 
-class StageFiles(HorillaModel):
+class StageFiles(SolichModel):
     files = models.FileField(upload_to="recruitment/stageFiles", blank=True, null=True)
 
     def __str__(self):
         return self.files.name.split("/")[-1]
 
 
-class StageNote(HorillaModel):
+class StageNote(SolichModel):
     """
     StageNote model
     """
@@ -648,7 +648,7 @@ class StageNote(HorillaModel):
     stage_id = models.ForeignKey(Stage, on_delete=models.CASCADE)
     stage_files = models.ManyToManyField(StageFiles, blank=True)
     updated_by = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="candidate_id__recruitment_id__company_id"
     )
 
@@ -656,7 +656,7 @@ class StageNote(HorillaModel):
         return f"{self.description}"
 
 
-class RecruitmentSurvey(HorillaModel):
+class RecruitmentSurvey(SolichModel):
     """
     RecruitmentSurvey model
     """
@@ -694,7 +694,7 @@ class RecruitmentSurvey(HorillaModel):
     options = models.TextField(
         null=True, default="", help_text=_("Separate choices by ',  '"), max_length=255
     )
-    objects = HorillaCompanyManager(related_company_field="recruitment_ids__company_id")
+    objects = SolichCompanyManager(related_company_field="recruitment_ids__company_id")
 
     def __str__(self) -> str:
         return str(self.question)
@@ -721,7 +721,7 @@ class RecruitmentSurvey(HorillaModel):
         ]
 
 
-class QuestionOrdering(HorillaModel):
+class QuestionOrdering(SolichModel):
     """
     Survey Template model
     """
@@ -729,10 +729,10 @@ class QuestionOrdering(HorillaModel):
     question_id = models.ForeignKey(RecruitmentSurvey, on_delete=models.CASCADE)
     recruitment_id = models.ForeignKey(Recruitment, on_delete=models.CASCADE)
     sequence = models.IntegerField(default=0)
-    objects = HorillaCompanyManager(related_company_field="recruitment_ids__company_id")
+    objects = SolichCompanyManager(related_company_field="recruitment_ids__company_id")
 
 
-class RecruitmentSurveyAnswer(HorillaModel):
+class RecruitmentSurveyAnswer(SolichModel):
     """
     RecruitmentSurveyAnswer
     """
@@ -754,7 +754,7 @@ class RecruitmentSurveyAnswer(HorillaModel):
     attachment = models.FileField(
         upload_to="recruitment_attachment", null=True, blank=True
     )
-    objects = HorillaCompanyManager(related_company_field="recruitment_id__company_id")
+    objects = SolichCompanyManager(related_company_field="recruitment_id__company_id")
 
     @property
     def answer(self):
@@ -771,7 +771,7 @@ class RecruitmentSurveyAnswer(HorillaModel):
         return f"{self.candidate_id.name}-{self.recruitment_id}"
 
 
-class RecruitmentMailTemplate(HorillaModel):
+class RecruitmentMailTemplate(SolichModel):
     title = models.CharField(max_length=25, unique=True)
     body = models.TextField()
     company_id = models.ForeignKey(
@@ -786,7 +786,7 @@ class RecruitmentMailTemplate(HorillaModel):
         return f"{self.title}"
 
 
-class SkillZone(HorillaModel):
+class SkillZone(SolichModel):
     """ "
     Model for talent pool
     """
@@ -800,7 +800,7 @@ class SkillZone(HorillaModel):
         on_delete=models.CASCADE,
         verbose_name=_("Company"),
     )
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def get_active(self):
         return SkillZoneCandidate.objects.filter(is_active=True, skill_zone_id=self)
@@ -809,7 +809,7 @@ class SkillZone(HorillaModel):
         return self.title
 
 
-class SkillZoneCandidate(HorillaModel):
+class SkillZoneCandidate(SolichModel):
     """
     Model for saving candidate data's for future recruitment
     """
@@ -838,7 +838,7 @@ class SkillZoneCandidate(HorillaModel):
 
     reason = models.CharField(max_length=200, verbose_name=_("Reason"))
     added_on = models.DateField(auto_now_add=True)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="candidate_id__recruitment_id__company_id"
     )
 
@@ -856,7 +856,7 @@ class SkillZoneCandidate(HorillaModel):
         return str(self.candidate_id.get_full_name())
 
 
-class CandidateRating(HorillaModel):
+class CandidateRating(SolichModel):
     employee_id = models.ForeignKey(
         Employee, on_delete=models.PROTECT, related_name="candidate_rating"
     )
@@ -874,7 +874,7 @@ class CandidateRating(HorillaModel):
         return f"{self.employee_id} - {self.candidate_id} rating {self.rating}"
 
 
-class RecruitmentGeneralSetting(HorillaModel):
+class RecruitmentGeneralSetting(SolichModel):
     """
     RecruitmentGeneralSettings model
     """
@@ -884,7 +884,7 @@ class RecruitmentGeneralSetting(HorillaModel):
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
 
 
-class InterviewSchedule(HorillaModel):
+class InterviewSchedule(SolichModel):
     """
     Interview Scheduling Model
     """
@@ -923,3 +923,4 @@ class Resume(models.Model):
 
     def __str__(self):
         return f"{self.recruitment_id} - Resume {self.pk}"
+

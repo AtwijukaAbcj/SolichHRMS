@@ -149,3 +149,4 @@ class LetterReGroup(FilterSet):
         ("employee_id__employee_work_info__job_position_id", "Job Position"),
         ("employee_id__employee_work_info__reporting_manager_id", "Reporting Manager"),
     ]
+

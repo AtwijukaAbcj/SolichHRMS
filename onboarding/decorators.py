@@ -130,3 +130,4 @@ def recruitment_manager_can_enter(function, perm):
         return HttpResponse(script)
 
     return _function
+

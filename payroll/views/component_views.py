@@ -25,13 +25,13 @@ from base.backends import ConfiguredEmailBackend
 from base.methods import closest_numbers, filter_own_records, get_key_instances, sortby
 from base.models import Company
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     login_required,
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from leave.models import AvailableLeave
 from notifications.signals import notify
 from payroll.filters import (
@@ -1639,3 +1639,4 @@ def get_contribution_report(request):
         "payroll/dashboard/contribution.html",
         {"contribution_deductions": contribution_deductions},
     )
+

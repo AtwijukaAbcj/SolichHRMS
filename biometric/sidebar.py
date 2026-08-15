@@ -41,3 +41,4 @@ def biometric_device_accessibility(request, submenu, user_perms, *args, **kwargs
         and request.user.has_perm("biometric.view_biometricdevices")
         and biometric_is_installed(None)["is_installed"]
     )
+

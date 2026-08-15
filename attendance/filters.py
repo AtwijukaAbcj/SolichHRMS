@@ -23,7 +23,7 @@ from attendance.models import (
 )
 from base.filters import FilterSet
 from employee.models import Employee
-from horilla.filters import filter_by_name
+from solich.filters import filter_by_name
 
 
 class DurationInSecondsFilter(django_filters.CharFilter):
@@ -645,3 +645,4 @@ class AttendanceRequestReGroup:
         ("employee_id__employee_work_info__employee_type_id", "Employment Type"),
         ("employee_id__employee_work_info__company_id", "Company"),
     ]
+

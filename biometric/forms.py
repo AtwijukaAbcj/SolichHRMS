@@ -188,3 +188,4 @@ class COSECUserForm(Form):
                 raise forms.ValidationError(
                     "When the Validity field is enabled, a Validity End Date is required."
                 )
+

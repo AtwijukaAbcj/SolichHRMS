@@ -19,3 +19,4 @@ class AssetResource(resources.ModelResource):
         """
 
         model = Asset
+

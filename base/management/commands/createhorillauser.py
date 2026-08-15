@@ -48,10 +48,10 @@ class Command(BaseCommand):
                 employee.email = email
                 employee.phone = phone
                 employee.save()
-                bot = User.objects.filter(username="Horilla Bot").first()
+                bot = User.objects.filter(username="Solich Bot").first()
                 if bot is None:
                     User.objects.create_user(
-                        username="Horilla Bot",
+                        username="Solich Bot",
                         password=str(uuid.uuid4()),
                     )
 
@@ -61,3 +61,4 @@ class Command(BaseCommand):
             except Exception as e:
                 user.delete()
                 raise CommandError('Error creating user "%s": %s' % (username, e))
+

@@ -16,9 +16,9 @@ from base.methods import reload_queryset
 from employee.filters import EmployeeFilter
 from employee.forms import MultipleFileField
 from employee.models import Employee
-from horilla import horilla_middlewares
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+from solich import solich_middlewares
+from solich_widgets.widgets.solich_multi_select_field import SolichMultiSelectField
+from solich_widgets.widgets.select_widgets import SolichMultiSelectWidget
 from notifications.signals import notify
 from offboarding.models import (
     EmployeeTask,
@@ -56,9 +56,9 @@ class OffboardingForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         reload_queryset(self.fields)
-        self.fields["managers"] = HorillaMultiSelectField(
+        self.fields["managers"] = SolichMultiSelectField(
             queryset=Employee.objects.filter(is_active=True),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -70,7 +70,7 @@ class OffboardingForm(ModelForm):
         )
 
     def clean(self):
-        if isinstance(self.fields["managers"], HorillaMultiSelectField):
+        if isinstance(self.fields["managers"], SolichMultiSelectField):
             ids = self.data.getlist("managers")
             if ids:
                 self.errors.pop("managers", None)
@@ -101,9 +101,9 @@ class OffboardingStageForm(ModelForm):
         super().__init__(*args, **kwargs)
 
         reload_queryset(self.fields)
-        self.fields["managers"] = HorillaMultiSelectField(
+        self.fields["managers"] = SolichMultiSelectField(
             queryset=Employee.objects.filter(is_active=True),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -115,7 +115,7 @@ class OffboardingStageForm(ModelForm):
         )
 
     def clean(self):
-        if isinstance(self.fields["managers"], HorillaMultiSelectField):
+        if isinstance(self.fields["managers"], SolichMultiSelectField):
             ids = self.data.getlist("managers")
             if ids:
                 self.errors.pop("managers", None)
@@ -317,7 +317,7 @@ class ResignationLetterForm(ModelForm):
                 self.instance.employee_id.get_full_name() + " Resignation Letter"
             )
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
 
         if request and not request.user.has_perm("offboarding.add_offboardingemployee"):
             exclude = exclude + [
@@ -330,7 +330,7 @@ class ResignationLetterForm(ModelForm):
             del self.fields[field]
 
     def save(self, commit: bool = ...) -> Any:
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         instance = self.instance
         if (
             not request.user.has_perm("offboarding.add_offboardingemployee")
@@ -360,3 +360,4 @@ class ResignationLetterForm(ModelForm):
                     icon="information",
                 )
         return instance
+

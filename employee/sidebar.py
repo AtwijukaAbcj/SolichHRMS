@@ -1,7 +1,7 @@
 """
 employee/sidebar.py
 
-To set Horilla sidebar for employee
+To set Solich sidebar for employee
 """
 
 from django.urls import reverse
@@ -72,7 +72,7 @@ def profile_accessibility(request, submenu, user_perms, *args, **kwargs):
 
 def document_accessibility(request, submenu, user_perms, *args, **kwargs):
     return request.user.has_perm(
-        "horilla_documents.view_documentrequest"
+        "Solich_documents.view_documentrequest"
     ) or is_reportingmanager(request.user)
 
 
@@ -86,3 +86,4 @@ def rotating_work_type_accessibility(request, submenu, user_perms, *args, **kwar
     return request.user.has_perm(
         "base.view_rotatingworktypeassign"
     ) or is_reportingmanager(request.user)
+

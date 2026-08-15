@@ -58,3 +58,4 @@ def handle_attendance_errors(error_list):
         del error_data[key]
 
     return error_data
+

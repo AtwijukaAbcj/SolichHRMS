@@ -30,8 +30,8 @@ from base.context_processors import (
     timerunner_enabled,
 )
 from base.models import AttendanceAllowedIP, EmployeeShiftDay
-from horilla.decorators import hx_request_required, login_required
-from horilla.horilla_middlewares import _thread_locals
+from solich.decorators import hx_request_required, login_required
+from solich.solich_middlewares import _thread_locals
 
 
 def late_come_create(attendance):
@@ -522,3 +522,4 @@ def clock_out(request):
             mouse_out=mouse_out,
         )
     )
+

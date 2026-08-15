@@ -1,7 +1,7 @@
 """
 recruitment/sidebar.py
 
-To set Horilla sidebar for onboarding
+To set Solich sidebar for onboarding
 """
 
 from django.contrib.auth.context_processors import PermWrapper
@@ -134,3 +134,4 @@ def skill_zone_accessibility(
 
 def dashboard_accessibility(request, submenu, user_perms, *args, **kwargs):
     return is_stagemanager(request.user) or "recruitment" in user_perms
+

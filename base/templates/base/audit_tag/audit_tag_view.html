@@ -5,7 +5,7 @@
 			<div class="oh-sticky-table__tr">
 				<div class="oh-sticky-table__th">{% trans "Title" %}</div>
                 <div class="oh-sticky-table__th">{% trans "Highlight" %}</div>
-				{% if perms.horilla_audit.delete_audittag or perms.horilla_audit.delete_audittag %}
+				{% if perms.solich_widgets.delete_audittag or perms.solich_widgets.delete_audittag %}
 					<div class="oh-sticky-table__th">{% trans "Actions" %}</div>
 				{% endif %}
 			</div>
@@ -19,10 +19,10 @@
                 {% else %}
                     <div class="oh-sticky-table__td">{% trans "No" %}</div>
                 {% endif %}
-				{% if perms.horilla_audit.delete_audittag or perms.horilla_audit.delete_audittag %}
+				{% if perms.solich_widgets.delete_audittag or perms.solich_widgets.delete_audittag %}
 					<div class="oh-sticky-table__td">
 						<div class="oh-btn-group">
-							{% if perms.horilla_audit.change_audittag %}
+							{% if perms.solich_widgets.change_audittag %}
 							<a
 								hx-get="{% url 'audit-tag-update' tag.id %}"
 								hx-target="#audittagEditForm"
@@ -35,7 +35,7 @@
 								<ion-icon name="create-outline"></ion-icon
 							></a>
 							{% endif %}
-							{% if perms.horilla_audit.delete_audittag %}
+							{% if perms.solich_widgets.delete_audittag %}
 							<form
 								action="{% url 'audit-tag-delete' tag.id %}"
 								class="w-50"

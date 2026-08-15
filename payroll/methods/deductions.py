@@ -48,3 +48,4 @@ def update_compensation_deduction(
         "deductions": deductions,
         "difference_amount": difference_amount,
     }
+

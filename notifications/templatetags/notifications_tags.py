@@ -118,3 +118,4 @@ def user_context(context):
     if user_is_anonymous:
         return None
     return user
+

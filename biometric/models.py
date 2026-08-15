@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models import Company
 from employee.models import Employee
-from horilla.models import HorillaModel
+from solich.models import SolichModel
 
 
 def validate_schedule_time_format(value):
@@ -34,7 +34,7 @@ def validate_schedule_time_format(value):
         raise ValidationError(_("Invalid format, it should be HH:MM format")) from error
 
 
-class BiometricDevices(HorillaModel):
+class BiometricDevices(SolichModel):
     """
     Model: BiometricDevices
 
@@ -259,3 +259,4 @@ class COSECAttendanceArguments(models.Model):
 
     def __str__(self):
         return f"{self.device_id} - {self.last_fetch_roll_ovr_count} - {self.last_fetch_seq_number}"
+

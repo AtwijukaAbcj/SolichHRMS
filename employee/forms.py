@@ -47,8 +47,8 @@ from employee.models import (
     Policy,
     PolicyMultipleFile,
 )
-from horilla import horilla_middlewares
-from horilla_audit.models import AccountBlockUnblock
+from solich import solich_middlewares
+from solich_audit.models import AccountBlockUnblock
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ class ModelForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for _, field in self.fields.items():
             widget = field.widget
@@ -681,3 +681,4 @@ class ActiontypeForm(ModelForm):
                 "onchange": "actionChange($(this))",
             }
         )
+

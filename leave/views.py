@@ -34,7 +34,7 @@ from base.methods import (
 )
 from base.models import *
 from employee.models import Employee
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     logger,
     login_required,
@@ -42,7 +42,7 @@ from horilla.decorators import (
     owner_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
+from solich.group_by import group_by_queryset
 from leave.decorators import *
 from leave.filters import *
 from leave.forms import *
@@ -5049,3 +5049,4 @@ def employee_past_leave_restriction(request):
         "leave/settings/past_leave_restrict_view.html",
         {"enabled_restriction": enabled_restriction},
     )
+

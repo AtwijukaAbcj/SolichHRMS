@@ -64,11 +64,11 @@ from base.models import (
 from employee.filters import EmployeeFilter
 from employee.forms import MultipleFileField
 from employee.models import Employee, EmployeeTag
-from horilla import horilla_middlewares
-from horilla.horilla_middlewares import _thread_locals
-from horilla_audit.models import AuditTag
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+from solich import solich_middlewares
+from solich.solich_middlewares import _thread_locals
+from solich_audit.models import AuditTag
+from solich_widgets.widgets.solich_multi_select_field import SolichMultiSelectField
+from solich_widgets.widgets.select_widgets import SolichMultiSelectWidget
 
 # your form here
 
@@ -181,7 +181,7 @@ class ModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         reload_queryset(self.fields)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         for field_name, field in self.fields.items():
             widget = field.widget
             if isinstance(widget, (forms.DateInput)):
@@ -359,9 +359,9 @@ class AssignPermission(Form):
     Forms to assign user permision
     """
 
-    employee = HorillaMultiSelectField(
+    employee = SolichMultiSelectField(
         queryset=Employee.objects.all(),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -672,9 +672,9 @@ class RotatingWorkTypeAssignForm(ModelForm):
     RotatingWorkTypeAssign model's form
     """
 
-    employee_id = HorillaMultiSelectField(
+    employee_id = SolichMultiSelectField(
         queryset=Employee.objects.filter(employee_work_info__isnull=False),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -1204,9 +1204,9 @@ class RotatingShiftAssignForm(forms.ModelForm):
     RotatingShiftAssign model's form
     """
 
-    employee_id = HorillaMultiSelectField(
+    employee_id = SolichMultiSelectField(
         queryset=Employee.objects.filter(employee_work_info__isnull=False),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -1780,7 +1780,7 @@ excluded_fields = [
     "created_by",
     "modified_by",
     "additional_data",
-    "horilla_history",
+    "Solich_history",
     "additional_data",
 ]
 
@@ -2320,3 +2320,4 @@ class TrackLateComeEarlyOutForm(ModelForm):
                 "hx-trigger": "change",
             }
         )
+

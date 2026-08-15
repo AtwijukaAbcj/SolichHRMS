@@ -76,7 +76,7 @@ from base.methods import (
 from base.models import EmployeeShiftSchedule
 from employee.filters import EmployeeFilter
 from employee.models import Employee, EmployeeWorkInformation
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     install_required,
     login_required,
@@ -2243,3 +2243,4 @@ def enable_timerunner(request):
     time_runner.time_runner = "time_runner" in request.GET.keys()
     time_runner.save()
     return HttpResponse("success")
+

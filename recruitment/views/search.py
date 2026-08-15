@@ -12,14 +12,14 @@ from django.core.paginator import Paginator
 from django.shortcuts import render
 
 from base.methods import get_key_instances, get_pagination, sortby
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     is_recruitment_manager,
     login_required,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
-from horilla.group_by import group_by_queryset as general_group_by
+from solich.group_by import group_by_queryset
+from solich.group_by import group_by_queryset as general_group_by
 from recruitment.filters import (
     CandidateFilter,
     RecruitmentFilter,
@@ -252,3 +252,4 @@ def filter_survey(request):
             "requests_ids": requests_ids,
         },
     )
+

@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from horilla.decorators import decorator_with_arguments
+from solich.decorators import decorator_with_arguments
 from offboarding.models import (
     Offboarding,
     OffboardingGeneralSetting,
@@ -101,3 +101,4 @@ def check_feature_enabled(function, feature_name):
         return HttpResponse(script)
 
     return _function
+

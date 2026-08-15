@@ -17,10 +17,10 @@ from base.forms import Form, ModelForm
 from base.methods import reload_queryset
 from employee.filters import EmployeeFilter
 from employee.models import BonusPoint, Employee
-from horilla import horilla_middlewares
-from horilla_widgets.forms import HorillaForm
-from horilla_widgets.widgets.horilla_multi_select_field import HorillaMultiSelectField
-from horilla_widgets.widgets.select_widgets import HorillaMultiSelectWidget
+from solich import solich_middlewares
+from solich_widgets.forms import SolichForm
+from solich_widgets.widgets.solich_multi_select_field import SolichMultiSelectField
+from solich_widgets.widgets.select_widgets import SolichMultiSelectWidget
 from leave.models import AvailableLeave, LeaveType
 from notifications.signals import notify
 from payroll.models import tax_models as models
@@ -73,9 +73,9 @@ class AllowanceForm(forms.ModelForm):
             kwargs["initial"] = initial
         super().__init__(*args, **kwargs)
 
-        self.fields["specific_employees"] = HorillaMultiSelectField(
+        self.fields["specific_employees"] = SolichMultiSelectField(
             queryset=Employee.objects.all(),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -107,7 +107,7 @@ class AllowanceForm(forms.ModelForm):
         include_all = self.data.get("include_active_employees")
 
         for field_name, field_instance in self.fields.items():
-            if isinstance(field_instance, HorillaMultiSelectField):
+            if isinstance(field_instance, SolichMultiSelectField):
                 self.errors.pop(field_name, None)
                 if not specific_employees and include_all is None:
                     raise forms.ValidationError({field_name: "This field is required"})
@@ -203,9 +203,9 @@ class DeductionForm(forms.ModelForm):
             kwargs["initial"] = initial
         super().__init__(*args, **kwargs)
 
-        self.fields["specific_employees"] = HorillaMultiSelectField(
+        self.fields["specific_employees"] = SolichMultiSelectField(
             queryset=Employee.objects.all(),
-            widget=HorillaMultiSelectWidget(
+            widget=SolichMultiSelectWidget(
                 filter_route_name="employee-widget-filter",
                 filter_class=EmployeeFilter,
                 filter_instance_contex_name="f",
@@ -229,7 +229,7 @@ class DeductionForm(forms.ModelForm):
         include_all = self.data.get("include_active_employees")
 
         for field_name, field_instance in self.fields.items():
-            if isinstance(field_instance, HorillaMultiSelectField):
+            if isinstance(field_instance, SolichMultiSelectField):
                 self.errors.pop(field_name, None)
                 if not specific_employees and include_all is None:
                     raise forms.ValidationError({field_name: "This field is required"})
@@ -367,7 +367,7 @@ class PayslipForm(ModelForm):
         }
 
 
-class GeneratePayslipForm(HorillaForm):
+class GeneratePayslipForm(SolichForm):
     """
     Form for Payslip
     """
@@ -377,9 +377,9 @@ class GeneratePayslipForm(HorillaForm):
         required=False,
         # help_text="Enter +-something if you want to generate payslips by batches",
     )
-    employee_id = HorillaMultiSelectField(
+    employee_id = SolichMultiSelectField(
         queryset=Employee.objects.none(),
-        widget=HorillaMultiSelectWidget(
+        widget=SolichMultiSelectWidget(
             filter_route_name="employee-widget-filter",
             filter_class=EmployeeFilter,
             filter_instance_contex_name="f",
@@ -699,7 +699,7 @@ class ReimbursementForm(ModelForm):
         if not self.instance.pk:
             self.initial["allowance_on"] = str(datetime.date.today())
 
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if request:
             employee = (
                 request.user.employee_get
@@ -783,7 +783,7 @@ class ReimbursementForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         if self.instance.pk:
             employee_id = self.instance.employee_id
             type = self.instance.type
@@ -910,3 +910,4 @@ class PayslipAutoGenerateForm(ModelForm):
         context = {"form": self}
         table_html = render_to_string("common_form.html", context)
         return table_html
+

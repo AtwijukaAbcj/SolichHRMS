@@ -132,3 +132,4 @@ def is_compensatory_leave_enabled(func=None, *args, **kwargs):
         return HttpResponse(script)
 
     return function
+

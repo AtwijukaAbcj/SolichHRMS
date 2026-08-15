@@ -407,3 +407,4 @@ class MeetingsFilter(FilterSet):
     #                     q_objects |= Q(**{key: value})
     #         return queryset.filter(q_objects)
     #     return super().filter_queryset(queryset)
+

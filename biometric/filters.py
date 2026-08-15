@@ -34,3 +34,4 @@ class BiometricDeviceFilter(FilterSet):
             "is_scheduler",
             "is_live",
         ]
+

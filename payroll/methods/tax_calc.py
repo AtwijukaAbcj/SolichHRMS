@@ -88,3 +88,4 @@ def calculate_taxable_amount(**kwargs):
         else:
             federal_tax_for_period = 0
     return federal_tax_for_period
+

@@ -20,3 +20,4 @@ def get_item(dictionary, key):
         The value associated with the specified key in the dictionary.
     """
     return dictionary.get(key)
+

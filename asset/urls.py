@@ -179,3 +179,4 @@ urlpatterns = [
         name="asset-history-search",
     ),
 ]
+

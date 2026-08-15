@@ -137,7 +137,7 @@ from employee.forms import ActiontypeForm
 from employee.models import Actiontype, Employee, EmployeeTag, EmployeeWorkInformation
 from helpdesk.forms import TicketTypeForm
 from helpdesk.models import DepartmentManager, TicketType
-from horilla.decorators import (
+from solich.decorators import (
     delete_permission,
     duplicate_permission,
     hx_request_required,
@@ -145,9 +145,9 @@ from horilla.decorators import (
     manager_can_enter,
     permission_required,
 )
-from horilla.group_by import group_by_queryset
-from horilla_audit.forms import HistoryTrackingFieldsForm
-from horilla_audit.models import AccountBlockUnblock, AuditTag, HistoryTrackingFields
+from solich.group_by import group_by_queryset
+from solich_audit.forms import HistoryTrackingFieldsForm
+from solich_audit.models import AccountBlockUnblock, AuditTag, HistoryTrackingFields
 from notifications.base.models import AbstractNotification
 from notifications.models import Notification
 from notifications.signals import notify
@@ -206,7 +206,7 @@ def initialize_database(request):
     if initialize_database_condition():
         if request.method == "POST":
             password = request._post.get("password")
-            from horilla.horilla_settings import DB_INIT_PASSWORD as db_password
+            from solich.solich_settings import DB_INIT_PASSWORD as db_password
 
             if db_password == password:
                 return redirect(initialize_database_user)
@@ -216,7 +216,7 @@ def initialize_database(request):
                     _("The password you entered is incorrect. Please try again."),
                 )
                 return HttpResponse("<script>window.location.reload()</script>")
-        return render(request, "initialize_database/horilla_user.html")
+        return render(request, "initialize_database/Solich_user.html")
     else:
         return redirect("/")
 
@@ -248,10 +248,10 @@ def initialize_database_user(request):
         login(request, user)
         return render(
             request,
-            "initialize_database/horilla_company.html",
+            "initialize_database/Solich_company.html",
             {"form": CompanyForm(initial={"hq": True})},
         )
-    return render(request, "initialize_database/horilla_user_signup.html")
+    return render(request, "initialize_database/Solich_user_signup.html")
 
 
 @hx_request_required
@@ -269,10 +269,10 @@ def initialize_database_company(request):
                 pass
             return render(
                 request,
-                "initialize_database/horilla_department.html",
+                "initialize_database/Solich_department.html",
                 {"form": DepartmentForm(initial={"company_id": company})},
             )
-    return render(request, "initialize_database/horilla_company.html", {"form": form})
+    return render(request, "initialize_database/Solich_company.html", {"form": form})
 
 
 @hx_request_required
@@ -287,7 +287,7 @@ def initialize_database_department(request):
             form = DepartmentForm(initial={"company_id": company})
     return render(
         request,
-        "initialize_database/horilla_department_form.html",
+        "initialize_database/Solich_department_form.html",
         {"form": form, "departments": departments},
     )
 
@@ -303,7 +303,7 @@ def initialize_department_edit(request, obj_id):
             form.save()
             return render(
                 request,
-                "initialize_database/horilla_department_form.html",
+                "initialize_database/Solich_department_form.html",
                 {
                     "form": DepartmentForm(initial={"company_id": company}),
                     "departments": Department.objects.all(),
@@ -311,7 +311,7 @@ def initialize_department_edit(request, obj_id):
             )
     return render(
         request,
-        "initialize_database/horilla_department_form.html",
+        "initialize_database/Solich_department_form.html",
         {
             "form": form,
             "department": department,
@@ -338,7 +338,7 @@ def initialize_database_job_position(request):
             form = JobPositionForm(initial={"company_id": Company.objects.first()})
         return render(
             request,
-            "initialize_database/horilla_job_position_form.html",
+            "initialize_database/Solich_job_position_form.html",
             {
                 "form": form,
                 "job_positions": JobPosition.objects.all(),
@@ -347,7 +347,7 @@ def initialize_database_job_position(request):
         )
     return render(
         request,
-        "initialize_database/horilla_job_position.html",
+        "initialize_database/Solich_job_position.html",
         {"form": form, "job_positions": JobPosition.objects.all(), "company": company},
     )
 
@@ -363,7 +363,7 @@ def initialize_job_position_edit(request, obj_id):
             form.save()
             return render(
                 request,
-                "initialize_database/horilla_job_position_form.html",
+                "initialize_database/Solich_job_position_form.html",
                 {
                     "form": JobPositionForm(initial={"company_id": company}),
                     "job_positions": JobPosition.objects.all(),
@@ -372,7 +372,7 @@ def initialize_job_position_edit(request, obj_id):
             )
     return render(
         request,
-        "initialize_database/horilla_job_position_form.html",
+        "initialize_database/Solich_job_position_form.html",
         {
             "form": form,
             "job_position": job_position,
@@ -389,7 +389,7 @@ def initialize_job_position_delete(request, obj_id):
     job_position.delete() if job_position else None
     return render(
         request,
-        "initialize_database/horilla_job_position_form.html",
+        "initialize_database/Solich_job_position_form.html",
         {
             "form": JobPositionForm(initial={"company_id": Company.objects.first()}),
             "job_positions": JobPosition.objects.all(),
@@ -463,9 +463,9 @@ def reset_send_success(request):
     return render(request, "reset_send.html")
 
 
-class HorillaPasswordResetView(PasswordResetView):
+class SolichPasswordResetView(PasswordResetView):
     """
-    Horilla View for Reset Password
+    Solich View for Reset Password
     """
 
     template_name = "forgot_password.html"
@@ -511,7 +511,7 @@ class HorillaPasswordResetView(PasswordResetView):
 
 class EmployeePasswordResetView(PasswordResetView):
     """
-    Horilla View for Employee Reset Password
+    Solich View for Employee Reset Password
     """
 
     template_name = "forgot_password.html"
@@ -789,7 +789,7 @@ def user_group_table(request):
         "payroll",
         "auth",
         "offboarding",
-        "horilla_documents",
+        "Solich_documents",
         "helpdesk",
     ]
     form = UserGroupForm()
@@ -870,7 +870,7 @@ def user_group(request):
         "payroll",
         "auth",
         "offboarding",
-        "horilla_documents",
+        "Solich_documents",
         "helpdesk",
     ]
     form = UserGroupForm()
@@ -916,7 +916,7 @@ def user_group_search(request):
         "payroll",
         "auth",
         "offboarding",
-        "horilla_documents",
+        "Solich_documents",
         "helpdesk",
     ]
     form = UserGroupForm()
@@ -1255,7 +1255,7 @@ def mail_server_test_email(request):
 
                 # Attach the image
                 image_path = path.join(
-                    settings.STATIC_ROOT, "images/ui/horilla-logo.png"
+                    settings.STATIC_ROOT, "images/ui/Solich-logo.png"
                 )
                 with open(image_path, "rb") as img:
                     msg_img = MIMEImage(img.read())
@@ -2852,7 +2852,7 @@ def employee_permission_assign(request):
         "payroll",
         "auth",
         "offboarding",
-        "horilla_documents",
+        "Solich_documents",
         "helpdesk",
     ]
     for app_name in apps:
@@ -2904,7 +2904,7 @@ def employee_permission_search(request, codename=None, uid=None):
         "payroll",
         "auth",
         "offboarding",
-        "horilla_documents",
+        "Solich_documents",
         "helpdesk",
     ]
     for app_name in apps:
@@ -2973,7 +2973,7 @@ def permission_table(request):
         "payroll",
         "auth",
         "offboarding",
-        "horilla_documents",
+        "Solich_documents",
         "helpdesk",
     ]
     form = AssignPermission()
@@ -5189,7 +5189,7 @@ def ticket_type_delete(request, t_type_id):
 
 
 @login_required
-@permission_required("horilla_audit.view_audittag")
+@permission_required("solich_widgets.view_audittag")
 def tag_view(request):
     """
     This method is used to show Audit tags
@@ -5326,7 +5326,7 @@ def employee_tag_update(request, tag_id):
 
 @login_required
 @hx_request_required
-@permission_required("horilla_audit.add_audittag")
+@permission_required("solich_widgets.add_audittag")
 def audit_tag_create(request):
     """
     This method renders form and template to create Ticket type
@@ -5350,7 +5350,7 @@ def audit_tag_create(request):
 
 @login_required
 @hx_request_required
-@permission_required("horilla_audit.change_audittag")
+@permission_required("solich_widgets.change_audittag")
 def audit_tag_update(request, tag_id):
     """
     This method renders form and template to create Ticket type

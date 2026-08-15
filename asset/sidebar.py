@@ -36,3 +36,4 @@ def dashboard_accessibility(request, submenu, user_perms, *args, **kwargs):
     dashboard and asset category view.
     """
     return request.user.has_perm("asset.view_assetcategory")
+

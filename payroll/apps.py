@@ -26,3 +26,4 @@ class PayrollConfig(AppConfig):
             """
 
         return ready
+

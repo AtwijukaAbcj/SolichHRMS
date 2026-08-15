@@ -176,3 +176,4 @@ def process_attendance_data(attendance_dicts):
             error_list.append(attendance_data)
 
     return error_list
+

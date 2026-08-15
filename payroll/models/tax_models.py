@@ -12,11 +12,11 @@ from django.utils.text import format_lazy
 from django.utils.translation import gettext_lazy as _
 
 from base.models import Company
-from horilla.models import HorillaModel
+from solich.models import SolichModel
 from payroll.models.models import FilingStatus
 
 
-class PayrollSettings(HorillaModel):
+class PayrollSettings(SolichModel):
     """
     Payroll settings model"""
 
@@ -36,7 +36,7 @@ class PayrollSettings(HorillaModel):
         return super().save(*args, **kwargs)
 
 
-class TaxBracket(HorillaModel):
+class TaxBracket(SolichModel):
     """
     TaxBracket model
     """
@@ -114,3 +114,4 @@ class TaxBracket(HorillaModel):
                         )
                     }
                 )
+

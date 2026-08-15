@@ -17,7 +17,7 @@ from django.template.defaultfilters import register
 from attendance.models import AttendanceValidationCondition
 from attendance.views.views import strtime_seconds
 from base.models import EmployeeShiftSchedule
-from horilla.horilla_middlewares import _thread_locals
+from solich.solich_middlewares import _thread_locals
 
 register = template.Library()
 
@@ -241,3 +241,4 @@ def get_item(list, i):
         return list[i]
     except:
         return None
+

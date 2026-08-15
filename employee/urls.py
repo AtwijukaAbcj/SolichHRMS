@@ -10,7 +10,7 @@ from base.views import object_delete, object_duplicate
 from employee import not_in_out_dashboard, policies, views
 from employee.forms import DisciplinaryActionForm
 from employee.models import DisciplinaryAction, Employee
-from horilla_documents.models import DocumentRequest
+from solich_documents.models import DocumentRequest
 
 urlpatterns = [
     path("get-language-code/", views.get_language_code, name="get-language-code"),
@@ -414,3 +414,4 @@ urlpatterns = [
     ),
     path("get_job_roles", views.get_job_roles, name="get_job_roles"),
 ]
+

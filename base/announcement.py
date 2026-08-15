@@ -9,7 +9,7 @@ from base.forms import AnnouncementCommentForm, AnnouncementForm
 from base.methods import filter_own_records
 from base.models import Announcement, AnnouncementComment, AnnouncementView
 from employee.models import Employee
-from horilla.decorators import login_required, permission_required
+from solich.decorators import login_required, permission_required
 from notifications.signals import notify
 
 
@@ -315,3 +315,4 @@ def viewed_by(request):
         announcement_id__id=announcement_id, viewed=True
     )
     return render(request, "announcement/viewed_by.html", {"viewed_by": viewed_by})
+

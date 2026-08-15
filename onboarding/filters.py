@@ -62,3 +62,4 @@ class OnboardingCandidateFilter(FilterSet):
     class Meta:
         model = CandidateStage
         fields = "__all__"
+

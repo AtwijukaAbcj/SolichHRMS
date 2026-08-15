@@ -20,11 +20,11 @@ from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 
 from attendance.methods.differentiate import get_diff_dict
-from base.horilla_company_manager import HorillaCompanyManager
+from base.solich_company_manager import SolichCompanyManager
 from base.models import Company, EmployeeShift, EmployeeShiftDay, WorkType
 from employee.models import Employee
-from horilla.models import HorillaModel
-from horilla_audit.models import HorillaAuditInfo, HorillaAuditLog
+from solich.models import SolichModel
+from solich_audit.models import SolichAuditInfo, SolichAuditLog
 from leave.methods import is_company_leave, is_holiday
 from leave.models import (
     WEEK_DAYS,
@@ -135,7 +135,7 @@ month_mapping = {
 }
 
 
-class AttendanceActivity(HorillaModel):
+class AttendanceActivity(SolichModel):
     """
     AttendanceActivity model
     """
@@ -163,7 +163,7 @@ class AttendanceActivity(HorillaModel):
     clock_out_date = models.DateField(null=True, verbose_name=_("Out Date"))
     out_datetime = models.DateTimeField(null=True)
     clock_out = models.TimeField(null=True, verbose_name=_("Check Out"))
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -175,7 +175,7 @@ class AttendanceActivity(HorillaModel):
         ordering = ["-attendance_date", "employee_id__employee_first_name", "clock_in"]
 
 
-class Attendance(HorillaModel):
+class Attendance(SolichModel):
     """
     Attendance model
     """
@@ -273,13 +273,13 @@ class Attendance(HorillaModel):
     )
     is_holiday = models.BooleanField(default=False)
     requested_data = models.JSONField(null=True, editable=False)
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
-    history = HorillaAuditLog(
+    history = SolichAuditLog(
         related_name="history_set",
         bases=[
-            HorillaAuditInfo,
+            SolichAuditInfo,
         ],
     )
 
@@ -578,11 +578,11 @@ class Attendance(HorillaModel):
                 )
 
 
-class AttendanceRequestFile(HorillaModel):
+class AttendanceRequestFile(SolichModel):
     file = models.FileField(upload_to="attendance/request_files")
 
 
-class AttendanceRequestComment(HorillaModel):
+class AttendanceRequestComment(SolichModel):
     """
     AttendanceRequestComment Model
     """
@@ -596,7 +596,7 @@ class AttendanceRequestComment(HorillaModel):
         return f"{self.comment}"
 
 
-class AttendanceOverTime(HorillaModel):
+class AttendanceOverTime(SolichModel):
     """
     AttendanceOverTime model
     """
@@ -653,7 +653,7 @@ class AttendanceOverTime(HorillaModel):
         null=True,
         verbose_name=_("Overtime Seconds"),
     )
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
 
@@ -753,7 +753,7 @@ class AttendanceOverTime(HorillaModel):
         super().save(*args, **kwargs)
 
 
-class AttendanceLateComeEarlyOut(HorillaModel):
+class AttendanceLateComeEarlyOut(SolichModel):
     """
     AttendanceLateComeEarlyOut model
     """
@@ -778,7 +778,7 @@ class AttendanceLateComeEarlyOut(HorillaModel):
         editable=False,
     )
     type = models.CharField(max_length=20, choices=choices, verbose_name=_("Type"))
-    objects = HorillaCompanyManager(
+    objects = SolichCompanyManager(
         related_company_field="employee_id__employee_work_info__company_id"
     )
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -807,7 +807,7 @@ class AttendanceLateComeEarlyOut(HorillaModel):
             {self.attendance_id.employee_id.employee_last_name} - {self.type}"
 
 
-class AttendanceValidationCondition(HorillaModel):
+class AttendanceValidationCondition(SolichModel):
     """
     AttendanceValidationCondition model
     """
@@ -822,7 +822,7 @@ class AttendanceValidationCondition(HorillaModel):
         blank=True, null=True, max_length=10, validators=[validate_time_format]
     )
     company_id = models.ManyToManyField(Company, blank=True, verbose_name=_("Company"))
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def clean(self):
         """
@@ -849,7 +849,7 @@ months = [
 ]
 
 
-class PenaltyAccount(HorillaModel):
+class PenaltyAccount(SolichModel):
     """
     LateComeEarlyOutPenaltyAccount
     """
@@ -959,7 +959,7 @@ def create_initial_stage(sender, instance, created, **kwargs):
             available.save()
 
 
-class GraceTime(HorillaModel):
+class GraceTime(SolichModel):
     """
     Model for saving Grace time
     """
@@ -980,7 +980,7 @@ class GraceTime(HorillaModel):
     is_default = models.BooleanField(default=False)
 
     company_id = models.ManyToManyField(Company, blank=True, verbose_name=_("Company"))
-    objects = HorillaCompanyManager()
+    objects = SolichCompanyManager()
 
     def __str__(self) -> str:
         return str(f"{self.allowed_time} - Hours")
@@ -1031,10 +1031,11 @@ class GraceTime(HorillaModel):
         super().save(*args, **kwargs)
 
 
-class AttendanceGeneralSetting(HorillaModel):
+class AttendanceGeneralSetting(SolichModel):
     """
     AttendanceGeneralSettings
     """
 
     time_runner = models.BooleanField(default=True)
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+

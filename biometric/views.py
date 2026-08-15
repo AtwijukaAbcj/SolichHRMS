@@ -24,14 +24,14 @@ from zk import ZK
 from attendance.views.clock_in_out import clock_in, clock_out
 from base.methods import get_key_instances, get_pagination
 from employee.models import Employee, EmployeeWorkInformation
-from horilla import settings
-from horilla.decorators import (
+from solich import settings
+from solich.decorators import (
     hx_request_required,
     install_required,
     login_required,
     permission_required,
 )
-from horilla.filters import HorillaPaginator
+from solich.filters import SolichPaginator
 
 from .cosec import COSECBiometric
 from .filters import BiometricDeviceFilter
@@ -60,7 +60,7 @@ def paginator_qry(qryset, page_number):
     """
     This method is used to paginate query set
     """
-    paginator = HorillaPaginator(qryset, get_pagination())
+    paginator = SolichPaginator(qryset, get_pagination())
     qryset = paginator.get_page(page_number)
     return qryset
 
@@ -1325,7 +1325,7 @@ def edit_cosec_user(request, user_id, device_id):
 @login_required
 @install_required
 @permission_required("biometric.delete_biometricemployees")
-def delete_horilla_cosec_user(request, user_id, device_id):
+def delete_Solich_cosec_user(request, user_id, device_id):
     """
     View function to delete a user from a COSEC biometric device and database.
 
@@ -1910,3 +1910,4 @@ try:
                     pass
 except:
     pass
+

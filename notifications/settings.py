@@ -18,3 +18,4 @@ def get_config():
     config.update(user_config)
 
     return config
+

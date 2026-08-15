@@ -14,7 +14,7 @@ from base.forms import Form
 from base.methods import reload_queryset
 from employee.forms import MultipleFileField
 from employee.models import Employee
-from horilla import horilla_middlewares
+from solich import solich_middlewares
 from payroll.context_processors import get_active_employees
 from payroll.models.models import (
     Contract,
@@ -34,7 +34,7 @@ class ModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         reload_queryset(self.fields)
-        request = getattr(horilla_middlewares._thread_locals, "request", None)
+        request = getattr(Solich_middlewares._thread_locals, "request", None)
         for _, field in self.fields.items():
             widget = field.widget
 
@@ -261,3 +261,4 @@ class DashboardExport(Form):
         ],
         widget=forms.SelectMultiple,
     )
+

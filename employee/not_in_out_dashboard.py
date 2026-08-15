@@ -18,8 +18,8 @@ from base.backends import ConfiguredEmailBackend
 from base.methods import generate_pdf
 from employee.filters import EmployeeFilter
 from employee.models import Employee
-from horilla import settings
-from horilla.decorators import login_required, manager_can_enter
+from solich import settings
+from solich.decorators import login_required, manager_can_enter
 from recruitment.models import RecruitmentMailTemplate
 
 
@@ -186,3 +186,4 @@ def send_mail_to_employee(request):
         except Exception as e:
             messages.error(request, "Something went wrong")
     return HttpResponse("<script>window.location.reload()</script>")
+

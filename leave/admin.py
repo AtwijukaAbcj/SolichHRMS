@@ -34,3 +34,4 @@ admin.site.register(LeaveallocationrequestComment)
 admin.site.register(RestrictLeave)
 admin.site.register(CompensatoryLeaveRequest)
 admin.site.register(LeaveGeneralSetting)
+

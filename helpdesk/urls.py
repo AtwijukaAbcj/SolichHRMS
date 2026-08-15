@@ -107,3 +107,4 @@ urlpatterns = [
         name="update-priority",
     ),
 ]
+

@@ -211,3 +211,4 @@ class DepartmentManagerCreateForm(ModelForm):
     class Meta:
         model = DepartmentManager
         fields = ["department", "manager"]
+

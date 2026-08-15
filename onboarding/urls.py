@@ -156,3 +156,4 @@ urlpatterns = [
         "candidate-select/", views.candidate_select, name="candidate-select-onboarding"
     ),
 ]
+

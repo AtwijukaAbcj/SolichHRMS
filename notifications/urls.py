@@ -47,3 +47,4 @@ urlpatterns = [
 ]
 
 app_name = "notifications"
+

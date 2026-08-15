@@ -16,7 +16,7 @@ from attendance.models import Attendance, AttendanceValidationCondition
 from attendance.views.views import strtime_seconds
 from base.methods import filtersubordinates
 from base.models import ShiftRequest, WorkTypeRequest
-from horilla.decorators import login_required
+from solich.decorators import login_required
 from leave.models import LeaveAllocationRequest, LeaveRequest
 from pms.models import Feedback
 
@@ -208,3 +208,4 @@ def dashboard_asset_request_approve(request):
             "requests_ids": requests_ids,
         },
     )
+

@@ -62,3 +62,4 @@ admin.site.register(Announcement)
 admin.site.register(Attachment)
 admin.site.register(EmailLog)
 admin.site.register(DashboardEmployeeCharts)
+

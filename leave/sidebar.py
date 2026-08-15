@@ -98,3 +98,4 @@ def company_leave_accessibility(request, submenu, user_perms, *args, **kwargs):
 
 def componstory_accessibility(request, submenu, user_perms, *args, **kwargs):
     return is_compensatory(request.user)
+

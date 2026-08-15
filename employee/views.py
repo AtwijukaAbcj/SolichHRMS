@@ -84,7 +84,7 @@ from employee.models import (
     EmployeeWorkInformation,
     NoteFiles,
 )
-from horilla.decorators import (
+from solich.decorators import (
     hx_request_required,
     logger,
     login_required,
@@ -92,16 +92,16 @@ from horilla.decorators import (
     owner_can_enter,
     permission_required,
 )
-from horilla.filters import HorillaPaginator
-from horilla.group_by import group_by_queryset
-from horilla_audit.models import AccountBlockUnblock, HistoryTrackingFields
-from horilla_documents.forms import (
+from solich.filters import SolichPaginator
+from solich.group_by import group_by_queryset
+from solich_audit.models import AccountBlockUnblock, HistoryTrackingFields
+from solich_documents.forms import (
     DocumentForm,
     DocumentRejectForm,
     DocumentRequestForm,
     DocumentUpdateForm,
 )
-from horilla_documents.models import Document, DocumentRequest
+from solich_documents.models import Document, DocumentRequest
 from leave.models import LeaveGeneralSetting, LeaveRequest
 from notifications.signals import notify
 from onboarding.models import OnboardingStage, OnboardingTask
@@ -632,7 +632,7 @@ def shift_tab(request, emp_id):
 
 
 @login_required
-@manager_can_enter("horilla_documents.view_documentrequests")
+@manager_can_enter("Solich_documents.view_documentrequests")
 def document_request_view(request):
     """
     This function is used to view documents requests of employees.
@@ -648,7 +648,7 @@ def document_request_view(request):
     documents = Document.objects.filter(document_request_id__isnull=False)
     documents = filtersubordinates(
         request=request,
-        perm="horilla_documents.view_documentrequests",
+        perm="Solich_documents.view_documentrequests",
         queryset=documents,
     )
     documents = group_by_queryset(
@@ -669,7 +669,7 @@ def document_request_view(request):
 
 @login_required
 @hx_request_required
-@manager_can_enter("horilla_documents.view_documentrequests")
+@manager_can_enter("Solich_documents.view_documentrequests")
 def document_filter_view(request):
     """
     This method is used to filter employee.
@@ -702,7 +702,7 @@ def document_filter_view(request):
 
 @login_required
 @hx_request_required
-@manager_can_enter("horilla_documents.add_documentrequests")
+@manager_can_enter("Solich_documents.add_documentrequests")
 def document_request_create(request):
     """
     This function is used to create document requests of an employee in employee requests view.
@@ -713,11 +713,11 @@ def document_request_create(request):
     Returns: return document_request_create_form template
     """
     form = DocumentRequestForm()
-    form = choosesubordinates(request, form, "horilla_documents.add_documentrequest")
+    form = choosesubordinates(request, form, "Solich_documents.add_documentrequest")
     if request.method == "POST":
         form = DocumentRequestForm(request.POST)
         form = choosesubordinates(
-            request, form, "horilla_documents.add_documentrequest"
+            request, form, "Solich_documents.add_documentrequest"
         )
         if form.is_valid():
             form = form.save()
@@ -747,7 +747,7 @@ def document_request_create(request):
 
 @login_required
 @hx_request_required
-@manager_can_enter("horilla_documents.change_documentrequests")
+@manager_can_enter("Solich_documents.change_documentrequests")
 def document_request_update(request, id):
     """
     This function is used to update document requests of an employee in employee requests view.
@@ -781,7 +781,7 @@ def document_request_update(request, id):
 
 @login_required
 @hx_request_required
-@owner_can_enter("horilla_documents.view_document", Employee)
+@owner_can_enter("Solich_documents.view_document", Employee)
 def document_tab(request, emp_id):
     """
     This function is used to view documents tab of an employee in employee individual
@@ -807,7 +807,7 @@ def document_tab(request, emp_id):
 
 @login_required
 @hx_request_required
-@owner_can_enter("horilla_documents.add_document", Employee)
+@owner_can_enter("Solich_documents.add_document", Employee)
 def document_create(request, emp_id):
     """
     This function is used to create documents from employee individual & profile view.
@@ -874,7 +874,7 @@ def document_delete(request, id):
     try:
         document = Document.objects.filter(id=id)
         # users can delete own documents
-        if not request.user.has_perm("horilla_documents.delete_document"):
+        if not request.user.has_perm("Solich_documents.delete_document"):
             document = document.filter(employee_id__employee_user_id=request.user)
         if document:
             document.delete()
@@ -1004,7 +1004,7 @@ def get_content_type(file_extension):
 
 @login_required
 @hx_request_required
-@manager_can_enter("horilla_documents.add_document")
+@manager_can_enter("Solich_documents.add_document")
 def document_approve(request, id):
     """
     This function used to view the approve uploaded document.
@@ -1029,7 +1029,7 @@ def document_approve(request, id):
 
 @login_required
 @hx_request_required
-@manager_can_enter("horilla_documents.add_document")
+@manager_can_enter("Solich_documents.add_document")
 def document_reject(request, id):
     """
     This function used to view the reject uploaded document.
@@ -1064,7 +1064,7 @@ def document_reject(request, id):
 
 
 @login_required
-@manager_can_enter("horilla_documents.add_document")
+@manager_can_enter("Solich_documents.add_document")
 def document_bulk_approve(request):
     """
     This function used to view the approve uploaded document.
@@ -1085,7 +1085,7 @@ def document_bulk_approve(request):
 
 
 @login_required
-@manager_can_enter("horilla_documents.add_document")
+@manager_can_enter("Solich_documents.add_document")
 def document_bulk_reject(request):
     """
     This function used to view the reject uploaded document.
@@ -1154,7 +1154,7 @@ def paginator_qry(qryset, page_number):
     """
     This method is used to paginate query set
     """
-    paginator = HorillaPaginator(qryset, get_pagination())
+    paginator = SolichPaginator(qryset, get_pagination())
     qryset = paginator.get_page(page_number)
     return qryset
 
@@ -3756,3 +3756,4 @@ def get_job_roles(request):
         "id", "job_role"
     )
     return JsonResponse({"job_roles": dict(job_roles)})
+
