@@ -47,5 +47,5 @@ def auto_check_out():
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(auto_check_out, "interval", seconds=30)
-scheduler.start()
+# scheduler.start()
 

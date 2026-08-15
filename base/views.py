@@ -192,13 +192,16 @@ def paginator_qry(queryset, page_number):
 
 def initialize_database_condition():
     initialize_database = not User.objects.exists()
+
     if not initialize_database:
         initialize_database = True
         superusers = User.objects.filter(is_superuser=True)
+
         for user in superusers:
             if hasattr(user, "employee_get"):
                 initialize_database = False
                 break
+
     return initialize_database
 
 
@@ -206,37 +209,48 @@ def initialize_database(request):
     if initialize_database_condition():
         if request.method == "POST":
             password = request._post.get("password")
+
             from solich.solich_settings import DB_INIT_PASSWORD as db_password
 
             if db_password == password:
                 return redirect(initialize_database_user)
-            else:
-                messages.warning(
-                    request,
-                    _("The password you entered is incorrect. Please try again."),
-                )
-                return HttpResponse("<script>window.location.reload()</script>")
-        return render(request, "initialize_database/Solich_user.html")
-    else:
-        return redirect("/")
 
+            messages.warning(
+                request,
+                _("The password you entered is incorrect. Please try again."),
+            )
+            return HttpResponse("<script>window.location.reload()</script>")
+
+        return render(
+            request,
+            "initialize_database/solich_user.html",
+        )
+
+    return redirect("/")
 
 @hx_request_required
 def initialize_database_user(request):
     if request.method == "POST":
         form_data = request.__dict__.get("_post")
+
         first_name = form_data.get("firstname")
         last_name = form_data.get("lastname")
         username = form_data.get("username")
         password = form_data.get("password")
         email = form_data.get("email")
         phone = form_data.get("phone")
+
         user = User.objects.filter(username=username).first()
+
         if user and not hasattr(user, "employee_get"):
             user.delete()
+
         user = User.objects.create_superuser(
-            username=username, email=email, password=password
+            username=username,
+            email=email,
+            password=password,
         )
+
         employee = Employee()
         employee.employee_user_id = user
         employee.employee_first_name = first_name
@@ -244,74 +258,138 @@ def initialize_database_user(request):
         employee.email = email
         employee.phone = phone
         employee.save()
-        user = authenticate(request, username=username, password=password)
+
+        user = authenticate(
+            request,
+            username=username,
+            password=password,
+        )
+
         login(request, user)
+
         return render(
             request,
-            "initialize_database/Solich_company.html",
-            {"form": CompanyForm(initial={"hq": True})},
+            "initialize_database/solich_company.html",
+            {
+                "form": CompanyForm(
+                    initial={
+                        "hq": True,
+                    }
+                )
+            },
         )
-    return render(request, "initialize_database/Solich_user_signup.html")
 
+    return render(
+        request,
+        "initialize_database/solich_user_signup.html",
+    )
 
 @hx_request_required
 def initialize_database_company(request):
     form = CompanyForm()
+
     if request.method == "POST":
-        form = CompanyForm(request.POST, request.FILES)
+        form = CompanyForm(
+            request.POST,
+            request.FILES,
+        )
+
         if form.is_valid():
             company = form.save()
+
             try:
                 employee = request.user.employee_get
                 employee.employee_work_info.company_id = company
                 employee.employee_work_info.save()
-            except:
+            except Exception:
                 pass
+
             return render(
                 request,
-                "initialize_database/Solich_department.html",
-                {"form": DepartmentForm(initial={"company_id": company})},
+                "initialize_database/solich_department.html",
+                {
+                    "form": DepartmentForm(
+                        initial={
+                            "company_id": company,
+                        }
+                    )
+                },
             )
-    return render(request, "initialize_database/Solich_company.html", {"form": form})
 
+    return render(
+        request,
+        "initialize_database/solich_company.html",
+        {
+            "form": form,
+        },
+    )
 
 @hx_request_required
 def initialize_database_department(request):
     departments = Department.objects.all()
-    form = DepartmentForm(initial={"company_id": Company.objects.first()})
+
+    form = DepartmentForm(
+        initial={
+            "company_id": Company.objects.first(),
+        }
+    )
+
     if request.method == "POST":
         form = DepartmentForm(request.POST)
+
         if form.is_valid():
             company = form.cleaned_data.get("company_id")
             form.save()
-            form = DepartmentForm(initial={"company_id": company})
+
+            form = DepartmentForm(
+                initial={
+                    "company_id": company,
+                }
+            )
+
     return render(
         request,
-        "initialize_database/Solich_department_form.html",
-        {"form": form, "departments": departments},
+        "initialize_database/solich_department_form.html",
+        {
+            "form": form,
+            "departments": departments,
+        },
     )
-
 
 @hx_request_required
 def initialize_department_edit(request, obj_id):
     department = Department.find(obj_id)
-    form = DepartmentForm(instance=department)
+
+    form = DepartmentForm(
+        instance=department,
+    )
+
     if request.method == "POST":
-        form = DepartmentForm(request.POST, instance=department)
+        form = DepartmentForm(
+            request.POST,
+            instance=department,
+        )
+
         if form.is_valid():
             company = form.cleaned_data.get("company_id")
             form.save()
+
             return render(
                 request,
-                "initialize_database/Solich_department_form.html",
+                "initialize_database/solich_department_form.html",
                 {
-                    "form": DepartmentForm(initial={"company_id": company}),
+                    "form": DepartmentForm(
+                        initial={
+                            "company_id": company,
+                        }
+                    ),
                     "departments": Department.objects.all(),
                 },
             )
+
     return render(
         request,
-        "initialize_database/Solich_department_form.html",
+        "initialize_database/solich_department_form.html",
         {
             "form": form,
             "department": department,
@@ -330,49 +408,80 @@ def initialize_department_delete(request, obj_id):
 @hx_request_required
 def initialize_database_job_position(request):
     company = Company.objects.first()
-    form = JobPositionForm(initial={"company_id": company})
+
+    form = JobPositionForm(
+        initial={
+            "company_id": company,
+        }
+    )
+
     if request.method == "POST":
         form = JobPositionForm(request.POST)
+
         if form.is_valid():
             form.save()
-            form = JobPositionForm(initial={"company_id": Company.objects.first()})
+
+            form = JobPositionForm(
+                initial={
+                    "company_id": Company.objects.first(),
+                }
+            )
+
         return render(
             request,
-            "initialize_database/Solich_job_position_form.html",
+            "initialize_database/solich_job_position_form.html",
             {
                 "form": form,
                 "job_positions": JobPosition.objects.all(),
                 "company": company,
             },
         )
+
     return render(
         request,
-        "initialize_database/Solich_job_position.html",
-        {"form": form, "job_positions": JobPosition.objects.all(), "company": company},
+        "initialize_database/solich_job_position.html",
+        {
+            "form": form,
+            "job_positions": JobPosition.objects.all(),
+            "company": company,
+        },
     )
-
 
 @hx_request_required
 def initialize_job_position_edit(request, obj_id):
     company = Company.objects.first()
     job_position = JobPosition.find(obj_id)
-    form = JobPositionForm(instance=job_position)
+
+    form = JobPositionForm(
+        instance=job_position,
+    )
+
     if request.method == "POST":
-        form = JobPositionForm(request.POST, instance=job_position)
+        form = JobPositionForm(
+            request.POST,
+            instance=job_position,
+        )
+
         if form.is_valid():
             form.save()
+
             return render(
                 request,
-                "initialize_database/Solich_job_position_form.html",
+                "initialize_database/solich_job_position_form.html",
                 {
-                    "form": JobPositionForm(initial={"company_id": company}),
+                    "form": JobPositionForm(
+                        initial={
+                            "company_id": company,
+                        }
+                    ),
                     "job_positions": JobPosition.objects.all(),
                     "company": company,
                 },
             )
+
     return render(
         request,
-        "initialize_database/Solich_job_position_form.html",
+        "initialize_database/solich_job_position_form.html",
         {
             "form": form,
             "job_position": job_position,
@@ -381,22 +490,27 @@ def initialize_job_position_edit(request, obj_id):
         },
     )
 
-
 @hx_request_required
 def initialize_job_position_delete(request, obj_id):
     company = Company.objects.first()
     job_position = JobPosition.find(obj_id)
-    job_position.delete() if job_position else None
+
+    if job_position:
+        job_position.delete()
+
     return render(
         request,
-        "initialize_database/Solich_job_position_form.html",
+        "initialize_database/solich_job_position_form.html",
         {
-            "form": JobPositionForm(initial={"company_id": Company.objects.first()}),
+            "form": JobPositionForm(
+                initial={
+                    "company_id": Company.objects.first(),
+                }
+            ),
             "job_positions": JobPosition.objects.all(),
             "company": company,
         },
     )
-
 
 def login_user(request):
     """
@@ -5189,7 +5303,7 @@ def ticket_type_delete(request, t_type_id):
 
 
 @login_required
-@permission_required("solich_widgets.view_audittag")
+@permission_required("Solich_audit.view_audittag")
 def tag_view(request):
     """
     This method is used to show Audit tags
@@ -5326,7 +5440,7 @@ def employee_tag_update(request, tag_id):
 
 @login_required
 @hx_request_required
-@permission_required("solich_widgets.add_audittag")
+@permission_required("Solich_audit.add_audittag")
 def audit_tag_create(request):
     """
     This method renders form and template to create Ticket type
@@ -5350,7 +5464,7 @@ def audit_tag_create(request):
 
 @login_required
 @hx_request_required
-@permission_required("solich_widgets.change_audittag")
+@permission_required("Solich_audit.change_audittag")
 def audit_tag_update(request, tag_id):
     """
     This method renders form and template to create Ticket type
@@ -6406,3 +6520,4 @@ def skills_view(request):
     """
     skills = Skill.objects.all()
     return render(request, "settings/skills/skills_view.html", {"skills": skills})
+

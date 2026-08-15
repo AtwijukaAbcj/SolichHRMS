@@ -468,5 +468,5 @@ except:
     pass
 
 
-scheduler.start()
+# scheduler.start()
 

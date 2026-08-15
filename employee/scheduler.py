@@ -134,5 +134,5 @@ def block_unblock_disciplinary():
 scheduler = BackgroundScheduler()
 scheduler.add_job(update_experience, "interval", hours=4)
 scheduler.add_job(block_unblock_disciplinary, "interval", seconds=10)
-scheduler.start()
+#scheduler.start()
 
