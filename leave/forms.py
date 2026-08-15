@@ -66,7 +66,7 @@ class ModelForm(forms.ModelForm):
         based on the current request, particularly for 'employee_id' and 'company_id' fields.
         """
         super().__init__(*args, **kwargs)
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for field_name, field in self.fields.items():
             widget = field.widget
@@ -115,7 +115,7 @@ class ModelForm(forms.ModelForm):
 class ConditionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for field_name, field in self.fields.items():
             widget = field.widget
@@ -1293,7 +1293,7 @@ class CompensatoryLeaveForm(ModelForm):
 
         super(CompensatoryLeaveForm, self).__init__(*args, **kwargs)
 
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         instance_id = None
         if self.instance:
             instance_id = self.instance.id

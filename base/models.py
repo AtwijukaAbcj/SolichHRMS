@@ -872,7 +872,7 @@ class WorkTypeRequest(SolichModel):
         return False
 
     def clean(self):
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         if not request.user.is_superuser:
             if self.requested_date < django.utils.timezone.now().date():
                 raise ValidationError(_("Date must be greater than or equal to today"))
@@ -991,7 +991,7 @@ class ShiftRequest(SolichModel):
 
     def clean(self):
 
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         if not request.user.is_superuser:
             if not self.pk and self.requested_date < django.utils.timezone.now().date():
                 raise ValidationError(_("Date must be greater than or equal to today"))

@@ -26,7 +26,7 @@ class ModelForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         reload_queryset(self.fields)
         for field_name, field in self.fields.items():
             input_widget = field.widget

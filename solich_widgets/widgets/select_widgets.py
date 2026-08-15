@@ -69,7 +69,7 @@ class SolichMultiSelectWidget(forms.Widget):
         uid = get_short_uuid(5)
         context["section_id"] = uid
         context[self.filter_instance_contex_name] = self.filter_class
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         ALL_INSTANCES[str(request.user.id)] = self
 
         return context

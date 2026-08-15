@@ -323,7 +323,7 @@ class OffboardingNote(SolichModel):
         ordering = ["-created_at"]
 
     def save(self, *args, **kwargs):
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         if request:
             updated_by = request.user.employee_get
             self.note_by = updated_by

@@ -688,7 +688,7 @@ class LeaveRequest(SolichModel):
             emp_dep = self.employee_id.employee_work_info.department_id
             emp_job = self.employee_id.employee_work_info.job_position_id
 
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         if not request.user.is_superuser:
             if EmployeePastLeaveRestrict.objects.first().enabled:
                 if self.start_date < date.today():
@@ -792,7 +792,7 @@ class LeaveRequest(SolichModel):
         return result
 
     def is_approved(self):
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         if request:
             employee = Employee.objects.filter(employee_user_id=request.user).first()
             condition_approval = LeaveRequestConditionApproval.objects.filter(
@@ -804,7 +804,7 @@ class LeaveRequest(SolichModel):
                 return True
 
     def delete(self, *args, **kwargs):
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
 
         if self.status == "requested":
             """

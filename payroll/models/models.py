@@ -1628,7 +1628,7 @@ class Reimbursement(SolichModel):
         ordering = ["-id"]
 
     def save(self, *args, **kwargs) -> None:
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         amount_for_leave = (
             EncashmentGeneralSettings.objects.first().leave_amount
             if EncashmentGeneralSettings.objects.first()
@@ -1668,7 +1668,7 @@ class Reimbursement(SolichModel):
                         bonus_points.save()
                     else:
                         request = getattr(
-                            Solich_middlewares._thread_locals, "request", None
+                            solich_middlewares._thread_locals, "request", None
                         )
                         if request:
                             messages.info(
@@ -1694,7 +1694,7 @@ class Reimbursement(SolichModel):
                             assigned_leave.save()
                         else:
                             request = getattr(
-                                Solich_middlewares._thread_locals, "request", None
+                                solich_middlewares._thread_locals, "request", None
                             )
                             if request:
                                 messages.info(
@@ -1737,7 +1737,7 @@ class Reimbursement(SolichModel):
                     self.allowance_id.delete()
 
     def delete(self, *args, **kwargs):
-        request = getattr(Solich_middlewares._thread_locals, "request", None)
+        request = getattr(solich_middlewares._thread_locals, "request", None)
         if self.status == "approved":
             message = messages.info(
                 request,
